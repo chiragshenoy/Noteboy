@@ -3,10 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
+    repositories {
+        maven {
+            url "http://dl.bintray.com/glomadrian/maven"
+        }
+    }
     defaultConfig {
         applicationId "noteboy.noteboy"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -26,5 +30,6 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:design:23.+'
     compile 'com.parse:parse-android:1.+'
+    compile 'com.android.support:cardview-v7:23.0.+'
     debugCompile 'com.parse:parseinterceptors:0.0.1'
-}
+    compile 'com.github.glomadrian:loadingballs:1.1@aar'}

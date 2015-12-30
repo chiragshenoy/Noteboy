@@ -5,6 +5,7 @@ import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.interceptors.ParseStethoInterceptor;
 
 /**
@@ -12,16 +13,13 @@ import com.parse.interceptors.ParseStethoInterceptor;
  */
 public class ParseApplication extends Application {
 
-    public boolean isDataLoggerServiceRunning = false;
-
-
     @Override
     public void onCreate() {
         super.onCreate();
 
 
-        Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
-        Parse.addParseNetworkInterceptor(new ParseStethoInterceptor());
+//        Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
+//        Parse.addParseNetworkInterceptor(new ParseStethoInterceptor());
         Parse.enableLocalDatastore(this);
 
         Parse.initialize(this, "a8cAez0DOO17ghQEYQcB6Ni7nGTD0c6RkSwTWbj3", "SVLzidFiHWpRZXCBkwmQj2FxWum78N4884IKTSGX");
