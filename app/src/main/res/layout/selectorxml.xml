@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:lib="http://schemas.android.com/tools"
     android:orientation="vertical"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.github.glomadrian.loadingballs.BallView
+        android:id="@+id/loaderSelect"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        lib:ball_colors="@array/colors"
+        lib:balls="3"
+        lib:enable_size_animation="true"
+        lib:max_ball_size="12dp"
+        lib:min_ball_size="5dp"
+        lib:movement_cycle_time="1500"
+        lib:path="triangle"
+        lib:size_cycle_time="500"></com.github.glomadrian.loadingballs.BallView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/llSelector">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textSize="30dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:id="@+id/frombundle" />
+
+        <com.antonionicolaspina.revealtextview.RevealTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:duration="2000"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            app:text="You are from the branch : "/>
 
     <fr.ganfra.materialspinner.MaterialSpinner
         android:id="@+id/spinner1"
@@ -13,23 +53,35 @@
         app:ms_arrowColor="#0000FF"
         app:ms_arrowSize="16dp"
         app:ms_floatingLabelColor="#00FF00"
-        app:ms_floatingLabelText="floating label"
-        app:ms_hint="hint"
+        app:ms_floatingLabelText="You have selected your branch,select year"
+        app:ms_hint="Select your branch"
         app:ms_multiline="true" />
+
+        <com.antonionicolaspina.revealtextview.RevealTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:duration="2000"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            app:text="and year : "/>
 
     <com.lukedeighton.wheelview.WheelView
         android:id="@+id/wheelview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:wheelColor="#dddddd"
+        app:wheelColor="#4c4cFF"
         app:rotatableWheelDrawable="false"
         app:selectionAngle="90.0"
-        app:wheelPosition="bottom"
-        app:wheelOffsetY="60dp"
+        app:wheelOffsetY="0dp"
         app:repeatItems="true"
-        app:wheelRadius="276dp"
-        app:wheelItemCount="14"
-        app:wheelPadding="13dp"
-        app:wheelItemRadius="43dp"/>
+        app:wheelRadius="100dp"
+        app:wheelItemCount="4"
+        app:wheelPadding="0dp"
+        app:wheelItemRadius="25dp"/>
+    </LinearLayout>
 
-</LinearLayout>
+
+
+
+</RelativeLayout>

@@ -7,16 +7,25 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.antonionicolaspina.revealtextview.RevealTextView;
+import com.github.glomadrian.loadingballs.BallView;
 import com.lukedeighton.wheelview.WheelView;
 
 import com.lukedeighton.wheelview.WheelView;
 import com.lukedeighton.wheelview.adapter.WheelAdapter;
 import com.lukedeighton.wheelview.adapter.WheelArrayAdapter;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,39 +40,74 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  */
 public class Selector extends AppCompatActivity {
     String[] ITEMS={"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"};
+    ArrayList<String> Items = new ArrayList();
     Bundle b;
+    TextView text;
     WheelView wheelView;
     Drawable[] dArray;
     MaterialSpinner spinner;
+    BallView ballView;
+    ArrayAdapter<String> adapter;
+    LinearLayout select;
+    String superQUeryInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selectorxml);
         init();
+        parseQueryOfBranchNames();
         setUpSpinner();
         populateAdapter();
         wheelViewListeners();
+
         // Toast.makeText(getApplicationContext(), "in selector " + b.get("college_name").toString(), Toast.LENGTH_LONG).show();
 
     }
 
 
-  //FUNCTIONS AND CLASSES IN ORDER
+
+    //FUNCTIONS AND CLASSES IN ORDER
 
 
     //INIT
     private void init() {
         //get bundle
         b = getIntent().getExtras();
-        b.get("college_name");
-
-        //Wheel View
+       superQUeryInterface = (String) b.get("college_name");
         wheelView = (WheelView) findViewById(R.id.wheelview);
+        ballView = (BallView) findViewById(R.id.loaderSelect);
+        text = (TextView)findViewById(R.id.frombundle);
+
+        select = (LinearLayout)findViewById(R.id.llSelector);
+        select.setVisibility(View.INVISIBLE);
+    }
+
+    private void parseQueryOfBranchNames() {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
+        query.whereNotEqualTo("branch", "bobo");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> scoreList, ParseException e) {
+                if (e == null) {
+
+                    for (ParseObject value : scoreList) {
+                        Items.add(value.getString("branch"));
+                    }
+                    adapter.notifyDataSetChanged();
+                    select.setVisibility(View.VISIBLE);
+                    text.setText(superQUeryInterface);
+                    ballView.setVisibility(View.GONE);
+                    Log.d("score", "Retrieved " + scoreList.size() + " scores");
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
 //Setting up spinner
     private void setUpSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ITEMS);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner = (MaterialSpinner) findViewById(R.id.spinner1);
         spinner.setAdapter(adapter);
@@ -79,8 +123,8 @@ public class Selector extends AppCompatActivity {
             @Override
             public Drawable getDrawable(int position) {
                 dArray = new Drawable[]{getResources().getDrawable(R.mipmap.i11),
-                        getResources().getDrawable(R.mipmap.i22),getResources().getDrawable(R.mipmap.three),
-                        getResources().getDrawable(R.mipmap.four)};
+                        getResources().getDrawable(R.mipmap.i22),getResources().getDrawable(R.mipmap.i33),
+                        getResources().getDrawable(R.mipmap.i44)};
 
                 //return drawable here man
                 return dArray[position];
@@ -146,4 +190,5 @@ public class Selector extends AppCompatActivity {
 
 
 
-    }
+
+}
