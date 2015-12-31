@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fr.ganfra.materialspinner.MaterialSpinner
+        android:id="@+id/spinner1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:ms_arrowColor="#0000FF"
+        app:ms_arrowSize="16dp"
+        app:ms_floatingLabelColor="#00FF00"
+        app:ms_floatingLabelText="floating label"
+        app:ms_hint="hint"
+        app:ms_multiline="true" />
+
+    <com.lukedeighton.wheelview.WheelView
+        android:id="@+id/wheelview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:wheelColor="#dddddd"
+        app:rotatableWheelDrawable="false"
+        app:selectionAngle="90.0"
+        app:wheelPosition="bottom"
+        app:wheelOffsetY="60dp"
+        app:repeatItems="true"
+        app:wheelRadius="276dp"
+        app:wheelItemCount="14"
+        app:wheelPadding="13dp"
+        app:wheelItemRadius="43dp"/>
+
+</LinearLayout>
