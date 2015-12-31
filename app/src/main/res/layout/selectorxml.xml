@@ -7,6 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:transitionName="profile"
+        android:textSize="30dp"
+
+        android:layout_above="@+id/loaderSelect"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+
+        android:id="@+id/frombundle" />
+
     <com.github.glomadrian.loadingballs.BallView
         android:id="@+id/loaderSelect"
         android:layout_width="100dp"
@@ -23,19 +35,15 @@
         lib:path="triangle"
         lib:size_cycle_time="500"></com.github.glomadrian.loadingballs.BallView>
 
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_below="@+id/frombundle"
         android:id="@+id/llSelector">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textSize="30dp"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:id="@+id/frombundle" />
 
         <com.antonionicolaspina.revealtextview.RevealTextView
             android:layout_width="wrap_content"

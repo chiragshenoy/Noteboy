@@ -39,6 +39,8 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  * Created by Chirag Shenoy on 30-Dec-15.
  */
 public class Selector extends AppCompatActivity {
+
+
     String[] ITEMS={"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"};
     ArrayList<String> Items = new ArrayList();
     Bundle b;
@@ -64,7 +66,18 @@ public class Selector extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
 
     //FUNCTIONS AND CLASSES IN ORDER
 
@@ -77,7 +90,7 @@ public class Selector extends AppCompatActivity {
         wheelView = (WheelView) findViewById(R.id.wheelview);
         ballView = (BallView) findViewById(R.id.loaderSelect);
         text = (TextView)findViewById(R.id.frombundle);
-
+        text.setText(superQUeryInterface);
         select = (LinearLayout)findViewById(R.id.llSelector);
         select.setVisibility(View.INVISIBLE);
     }
@@ -94,9 +107,10 @@ public class Selector extends AppCompatActivity {
                         Items.add(value.getString("branch"));
                     }
                     adapter.notifyDataSetChanged();
-                    select.setVisibility(View.VISIBLE);
-                    text.setText(superQUeryInterface);
                     ballView.setVisibility(View.GONE);
+                    select.setVisibility(View.VISIBLE);
+
+
                     Log.d("score", "Retrieved " + scoreList.size() + " scores");
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
@@ -171,6 +185,7 @@ public class Selector extends AppCompatActivity {
                if(i>-1) {
                    String s = ITEMS[i];
                    Toast.makeText(getApplicationContext(), "Selected " +s, Toast.LENGTH_LONG).show();
+                   supportFinishAfterTransition();
                }
 
             }
