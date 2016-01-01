@@ -31,9 +31,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
@@ -52,6 +54,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     Drawable[] dArray;
     MaterialSpinner spinner;
     BallView ballView;
+
     ArrayAdapter<String> adapter;
     LinearLayout select;
     String superQUeryInterface;
@@ -103,7 +106,11 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
                     for (ParseObject value : scoreList) {
                         Items.add(value.getString("branch"));
+                        ;
                     }
+                    HashSet hs = new HashSet(Items);
+                    Items.clear();
+                    Items.addAll(hs);
                     adapter.notifyDataSetChanged();
                     ballView.setVisibility(View.GONE);
                     select.setVisibility(View.VISIBLE);
@@ -190,7 +197,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-               
+
             }
         });
     }
