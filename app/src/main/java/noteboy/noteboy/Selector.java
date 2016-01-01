@@ -1,5 +1,6 @@
 package noteboy.noteboy;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -7,10 +8,12 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +41,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 /**
  * Created by Chirag Shenoy on 30-Dec-15.
  */
-public class Selector extends AppCompatActivity {
+public class Selector extends AppCompatActivity implements View.OnClickListener {
 
 
     String[] ITEMS={"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"};
@@ -52,6 +55,8 @@ public class Selector extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     LinearLayout select;
     String superQUeryInterface;
+    String posiYear;String branch;
+    Button next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,18 +71,7 @@ public class Selector extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
 
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 
     //FUNCTIONS AND CLASSES IN ORDER
 
@@ -93,6 +87,10 @@ public class Selector extends AppCompatActivity {
         text.setText(superQUeryInterface);
         select = (LinearLayout)findViewById(R.id.llSelector);
         select.setVisibility(View.INVISIBLE);
+        posiYear = String.valueOf(1);
+
+        next = (Button)findViewById(R.id.bIntent);
+        next.setOnClickListener(this);
     }
 
     private void parseQueryOfBranchNames() {
@@ -166,7 +164,7 @@ public class Selector extends AppCompatActivity {
             @Override
             public void onWheelItemSelected(WheelView parent, Drawable itemDrawable, int position) {
                 //get the item at this position
-
+                posiYear = String.valueOf(position+1);
 
             }
         });
@@ -183,27 +181,27 @@ public class Selector extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                if(i>-1) {
-                   String s = ITEMS[i];
+                   String s = Items.get(i);
                    Toast.makeText(getApplicationContext(), "Selected " +s, Toast.LENGTH_LONG).show();
-                   supportFinishAfterTransition();
+                   branch = s;
                }
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+               
             }
         });
     }
 
 
-
-
-
-
-
-
-
-
+    @Override
+    public void onClick(View view) {
+        Intent i = new Intent(Selector.this , SubjectClass.class);
+        i.putExtra("year", posiYear);
+        i.putExtra("branch",branch);
+        i.putExtra("db",superQUeryInterface);
+        startActivity(i);
+    }
 }

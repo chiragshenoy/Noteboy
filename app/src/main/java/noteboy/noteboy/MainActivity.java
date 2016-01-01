@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CustomAdapter(colleges);
         mRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+           /// @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 //
@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
                 View cardText = findViewById(R.id.info_text);
 
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,cardText,"profile");
-                startActivity(intent,options.toBundle());
+               // ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,cardText,"profile");
+                startActivity(intent/*options.toBundle()*/);
 
             }
         });

@@ -19,6 +19,8 @@
 
         android:id="@+id/frombundle" />
 
+
+
     <com.github.glomadrian.loadingballs.BallView
         android:id="@+id/loaderSelect"
         android:layout_width="100dp"
@@ -37,12 +39,16 @@
 
 
 
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/frombundle"
+    android:layout_centerHorizontal="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/frombundle"
+
         android:id="@+id/llSelector">
 
         <com.antonionicolaspina.revealtextview.RevealTextView
@@ -59,6 +65,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:ms_arrowColor="#0000FF"
+
         app:ms_arrowSize="16dp"
         app:ms_floatingLabelColor="#00FF00"
         app:ms_floatingLabelText="You have selected your branch,select year"
@@ -73,6 +80,14 @@
             android:gravity="center"
             android:layout_gravity="center"
             app:text="and year : "/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/traingle"
+        android:layout_above="@+id/wheelview"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        />
 
     <com.lukedeighton.wheelview.WheelView
         android:id="@+id/wheelview"
@@ -87,7 +102,15 @@
         app:wheelItemCount="4"
         app:wheelPadding="0dp"
         app:wheelItemRadius="25dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bIntent"
+            android:layout_below="@+id/wheelview"/>
     </LinearLayout>
+
+</ScrollView>
 
 
 

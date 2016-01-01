@@ -23,6 +23,9 @@
         <activity android:name=".Selector">
 
         </activity>
+        <activity android:name=".SubjectClass">
+
+        </activity>
 
     </application>
 
