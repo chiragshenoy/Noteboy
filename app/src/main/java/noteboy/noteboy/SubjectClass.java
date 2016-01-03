@@ -10,13 +10,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ProgressCallback;
+import com.parse.SaveCallback;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +50,57 @@ public class SubjectClass extends AppCompatActivity {
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 
             @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//
-//
+            public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
+                query.whereEqualTo("subject_name", subjects.get(position));
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    public void done(List<ParseObject> scoreList, ParseException e) {
+                        if (scoreList.size() > 0) {
+
+
+                            ParseFile fileObject = (ParseFile) scoreList.get(0)
+                                    .get("notes_file");
+                            fileObject
+                                    .getDataInBackground(new GetDataCallback() {
+
+                                        public void done(final byte[] data,
+                                                         ParseException e) {
+                                            if (e == null) {
+                                                Log.d("test",
+                                                        "We've got data in data.");
+                                                ParseFile file = new ParseFile("/TRYING/hello.ppt", data);
+
+
+
+                                                file.saveInBackground(new SaveCallback() {
+                                                    public void done(ParseException e) {
+                                                        // Handle success or failure here ...
+
+                                                    }
+                                                }, new ProgressCallback() {
+                                                    public void done(Integer percentDone) {Log.d("test",
+                                                            "We've got data in data." + percentDone);
+                                                        // Update your progress spinner here. percentDone will be between 0 and 100.
+                                                    }
+                                                });
+
+                                            } else {
+                                                Log.d("test",
+                                                        "There was a problem downloading the data.");
+                                            }
+                                        }
+                                    });
+
+
+
+                            Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
             }
         });
 
