@@ -63,17 +63,6 @@ public class SubjectClass extends AppCompatActivity {
 
                             ParseFile fileObject = (ParseFile) scoreList.get(0)
                                     .get("notes_file");
-                            ParseFile bum = (ParseFile) scoreList.get(0).get("notes_file");
-                            byte[] file1 = new byte[0];
-                            try {
-                                file1 = bum.getData();
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
-                            }
-
-
-
-
                             fileObject
                                     .getDataInBackground(new GetDataCallback() {
 
