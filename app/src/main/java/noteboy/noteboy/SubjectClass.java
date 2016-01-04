@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ import com.parse.ParseQuery;
 import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,16 +63,39 @@ public class SubjectClass extends AppCompatActivity {
 
                             ParseFile fileObject = (ParseFile) scoreList.get(0)
                                     .get("notes_file");
+                            ParseFile bum = (ParseFile) scoreList.get(0).get("notes_file");
+                            byte[] file1 = new byte[0];
+                            try {
+                                file1 = bum.getData();
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+
+
+
                             fileObject
                                     .getDataInBackground(new GetDataCallback() {
 
-                                        public void done(final byte[] data,
+                                        public void done( byte[] data,
                                                          ParseException e) {
                                             if (e == null) {
                                                 Log.d("test",
                                                         "We've got data in data.");
-                                                ParseFile file = new ParseFile("/TRYING/hello.ppt", data);
+                                                ParseFile file = new ParseFile(getFilesDir()+"hello.ppt", data);
 
+                                                File file2 = new File(Environment.getDataDirectory(),"testFile.ppt");
+
+                                                try {
+                                                    FileOutputStream bos = null;
+                                                    bos = new FileOutputStream(file2.getPath());
+                                                    bos.write(data);
+                                                    bos.close();
+                                                } catch (FileNotFoundException e1 ) {
+                                                    e1.printStackTrace();
+                                                } catch (IOException e1) {
+                                                    e1.printStackTrace();
+                                                }
 
 
                                                 file.saveInBackground(new SaveCallback() {
