@@ -3,27 +3,22 @@ package noteboy.noteboy;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.glomadrian.loadingballs.Ball;
 import com.github.glomadrian.loadingballs.BallView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private BallView ballView;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         colleges = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
@@ -75,10 +68,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter = new CustomAdapter(colleges);
+        Typeface collegeFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
+        Typeface boldFont = Typeface.createFromAsset(getAssets(), "fonts/alfaslabone.ttf");
+
+        mAdapter = new CustomAdapter(this, colleges,collegeFont,boldFont);
         mRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-           /// @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            /// @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 //
@@ -86,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Selector.class);
                 intent.putExtra("college_name", colleges.get(position));
 
-                View cardText = findViewById(R.id.info_text);
+                View cardText = findViewById(R.id.college_name);
 
-               // ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,cardText,"profile");
+                // ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,cardText,"profile");
                 startActivity(intent/*options.toBundle()*/);
 
             }

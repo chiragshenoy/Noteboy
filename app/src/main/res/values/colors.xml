@@ -15,5 +15,7 @@
         <item>@color/ball3</item>
     </integer-array>
 
+    <color name="bold_letter">#FFFFFF</color>
+
 
 </resources>

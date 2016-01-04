@@ -1,12 +1,13 @@
 package noteboy.noteboy;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -14,25 +15,38 @@ import java.util.ArrayList;
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
+    Context context;
+    Typeface college_font;
+    Typeface bold_font;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mTextView;
+        public TextView tvCollegeName;
+        public TextView tvBoldLetter;
 
 
         public ViewHolder(View v) {
             super(v);
-            this.mTextView = (TextView) v.findViewById(R.id.info_text);
+            this.tvCollegeName = (TextView) v.findViewById(R.id.college_name);
+            this.tvBoldLetter = (TextView) v.findViewById(R.id.bold_letter);
 
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public CustomAdapter(ArrayList<String> myDataset) {
         mDataset = myDataset;
+
+    }
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public CustomAdapter(Context context, ArrayList<String> myDataset, Typeface college_font, Typeface bold_font) {
+        mDataset = myDataset;
+        this.context = context;
+        this.college_font = college_font;
+        this.bold_font = bold_font;
     }
 
     // Create new views (invoked by the layout manager)
@@ -53,7 +67,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position));
+        holder.tvCollegeName.setText(mDataset.get(position));
+        holder.tvCollegeName.setTypeface(college_font);
+
+        char c = mDataset.get(position).charAt(1);
+        holder.tvBoldLetter.setText(mDataset.get(position).substring(0, 1));
+        holder.tvBoldLetter.setTypeface(bold_font);
 
     }
 

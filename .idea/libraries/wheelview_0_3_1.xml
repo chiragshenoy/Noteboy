@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="wheelview-0.3.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.lukedeighton/wheelview/0.3.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.lukedeighton/wheelview/0.3.1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.lukedeighton/wheelview/0.3.1/6f6ce186c525a7250b8467461cf7a2e7e3d04375/wheelview-0.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -46,4 +46,5 @@ dependencies {
     dependencies {
         compile 'com.antonionicolaspina.revealtextview:revealtextview:0.1'
     }
+
 }
