@@ -36,11 +36,12 @@ import java.util.List;
  */
 public class SubjectClass extends AppCompatActivity {
     Bundle b;
-    String year,branch,superQUeryInterface;
+    String year, branch, superQUeryInterface;
     ArrayList<String> subjects;
     BallView ballView;
     RecyclerView.Adapter adapter;
     RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,58 +55,51 @@ public class SubjectClass extends AppCompatActivity {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
+
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
                 query.whereEqualTo("subject_name", subjects.get(position));
                 query.findInBackground(new FindCallback<ParseObject>() {
-                    public void done(List<ParseObject> scoreList, ParseException e) {
+                    public void done(final List<ParseObject> scoreList, ParseException e) {
                         if (scoreList.size() > 0) {
 
 
-                            ParseFile fileObject = (ParseFile) scoreList.get(0)
+                            final ParseFile fileObject = (ParseFile) scoreList.get(0)
                                     .get("notes_file");
                             fileObject
                                     .getDataInBackground(new GetDataCallback() {
 
-                                        public void done( byte[] data,
+                                        public void done(byte[] data,
                                                          ParseException e) {
                                             if (e == null) {
                                                 Log.d("test",
                                                         "We've got data in data.");
-                                                ParseFile file = new ParseFile(getFilesDir()+"hello.ppt", data);
 
-                                                File file2 = new File(Environment.getDataDirectory(),"testFile.ppt");
+                                                String folder_main = "Noteboy";
 
+                                                File f = new File(Environment.getExternalStorageDirectory(), folder_main);
+                                                if (!f.exists()) {
+                                                    f.mkdirs();
+                                                }
                                                 try {
-                                                    FileOutputStream bos = null;
-                                                    bos = new FileOutputStream(file2.getPath());
-                                                    bos.write(data);
-                                                    bos.close();
-                                                } catch (FileNotFoundException e1 ) {
+                                                    String path = f.getAbsolutePath() + File.separator + scoreList.get(0).get("subject_name");
+                                                    FileOutputStream stream = new FileOutputStream(path);
+                                                    stream.write(data);
+                                                } catch (FileNotFoundException e1) {
+                                                    Toast.makeText(getApplicationContext(), "Error saving file.Contact Noteboy", Toast.LENGTH_LONG).show();
                                                     e1.printStackTrace();
                                                 } catch (IOException e1) {
                                                     e1.printStackTrace();
                                                 }
 
-
-                                                file.saveInBackground(new SaveCallback() {
-                                                    public void done(ParseException e) {
-                                                        // Handle success or failure here ...
-
-                                                    }
-                                                }, new ProgressCallback() {
-                                                    public void done(Integer percentDone) {Log.d("test",
-                                                            "We've got data in data." + percentDone);
-                                                        // Update your progress spinner here. percentDone will be between 0 and 100.
-                                                    }
-                                                });
-
-                                            } else {
-                                                Log.d("test",
-                                                        "There was a problem downloading the data.");
                                             }
                                         }
-                                    });
 
+                                    }, new ProgressCallback() {
+                                        public void done(Integer percentDone) {
+                                            // Update your progress spinner here. percentDone will be between 0 and 100.
+
+                                        }
+                                    });
 
 
                             Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
@@ -151,6 +145,7 @@ public class SubjectClass extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setVisibility(View.INVISIBLE);
+
         ballView = (BallView) findViewById(R.id.loaderSubject);
         b = getIntent().getExtras();
         year = (String) b.get("year");
