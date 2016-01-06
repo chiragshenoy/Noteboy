@@ -19,6 +19,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mytoolbar);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+
         colleges = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         Typeface collegeFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
         Typeface boldFont = Typeface.createFromAsset(getAssets(), "fonts/alfaslabone.ttf");
 
-        mAdapter = new CustomAdapter(this, colleges,collegeFont,boldFont);
+        mAdapter = new CustomAdapter(this, colleges, collegeFont, boldFont);
         mRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             /// @TargetApi(Build.VERSION_CODES.LOLLIPOP)
