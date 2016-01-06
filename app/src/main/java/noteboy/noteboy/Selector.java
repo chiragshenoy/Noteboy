@@ -2,13 +2,8 @@ package noteboy.noteboy;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,13 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.antonionicolaspina.revealtextview.RevealTextView;
 import com.github.glomadrian.loadingballs.BallView;
 import com.lukedeighton.wheelview.WheelView;
 
-import com.lukedeighton.wheelview.WheelView;
 import com.lukedeighton.wheelview.adapter.WheelAdapter;
-import com.lukedeighton.wheelview.adapter.WheelArrayAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,9 +25,6 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
@@ -45,25 +34,25 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  */
 public class Selector extends AppCompatActivity implements View.OnClickListener {
 
+    private ArrayList<String> Items = new ArrayList();
+    private Bundle b;
+    private TextView text;
+    private WheelView wheelView;
+    private Drawable[] dArray;
+    private MaterialSpinner spinner;
+    private BallView ballView;
 
-    String[] ITEMS={"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"};
-    ArrayList<String> Items = new ArrayList();
-    Bundle b;
-    TextView text;
-    WheelView wheelView;
-    Drawable[] dArray;
-    MaterialSpinner spinner;
-    BallView ballView;
+    private ArrayAdapter<String> adapter;
+    private LinearLayout select;
+    private String superQUeryInterface;
+    private String posiYear;
+    private String branch;
+    private Button next;
 
-    ArrayAdapter<String> adapter;
-    LinearLayout select;
-    String superQUeryInterface;
-    String posiYear;String branch;
-    Button next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.selectorxml);
+        setContentView(R.layout.selector);
         init();
         parseQueryOfBranchNames();
         setUpSpinner();
@@ -75,7 +64,6 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     }
 
 
-
     //FUNCTIONS AND CLASSES IN ORDER
 
 
@@ -83,16 +71,16 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     private void init() {
         //get bundle
         b = getIntent().getExtras();
-       superQUeryInterface = (String) b.get("college_name");
+        superQUeryInterface = (String) b.get("college_name");
         wheelView = (WheelView) findViewById(R.id.wheelview);
         ballView = (BallView) findViewById(R.id.loaderSelect);
-        text = (TextView)findViewById(R.id.frombundle);
+        text = (TextView) findViewById(R.id.frombundle);
         text.setText(superQUeryInterface);
-        select = (LinearLayout)findViewById(R.id.llSelector);
+        select = (LinearLayout) findViewById(R.id.llSelector);
         select.setVisibility(View.INVISIBLE);
         posiYear = String.valueOf(1);
 
-        next = (Button)findViewById(R.id.bIntent);
+        next = (Button) findViewById(R.id.bIntent);
         next.setOnClickListener(this);
     }
 
@@ -106,7 +94,6 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
                     for (ParseObject value : scoreList) {
                         Items.add(value.getString("branch"));
-                        ;
                     }
                     HashSet hs = new HashSet(Items);
                     Items.clear();
@@ -124,14 +111,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         });
     }
 
-//Setting up spinner
+    //Setting up spinner
     private void setUpSpinner() {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner = (MaterialSpinner) findViewById(R.id.spinner1);
         spinner.setAdapter(adapter);
     }
-
 
 
 //Populating adapter of the wheel
@@ -142,7 +128,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
             @Override
             public Drawable getDrawable(int position) {
                 dArray = new Drawable[]{getResources().getDrawable(R.mipmap.i11),
-                        getResources().getDrawable(R.mipmap.i22),getResources().getDrawable(R.mipmap.i33),
+                        getResources().getDrawable(R.mipmap.i22), getResources().getDrawable(R.mipmap.i33),
                         getResources().getDrawable(R.mipmap.i44)};
 
                 //return drawable here man
@@ -171,7 +157,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onWheelItemSelected(WheelView parent, Drawable itemDrawable, int position) {
                 //get the item at this position
-                posiYear = String.valueOf(position+1);
+                posiYear = String.valueOf(position + 1);
 
             }
         });
@@ -187,11 +173,11 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-               if(i>-1) {
-                   String s = Items.get(i);
-                   Toast.makeText(getApplicationContext(), "Selected " +s, Toast.LENGTH_LONG).show();
-                   branch = s;
-               }
+                if (i > -1) {
+                    String s = Items.get(i);
+                    Toast.makeText(getApplicationContext(), "Selected " + s, Toast.LENGTH_LONG).show();
+                    branch = s;
+                }
 
             }
 
@@ -205,10 +191,10 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        Intent i = new Intent(Selector.this , SubjectClass.class);
+        Intent i = new Intent(Selector.this, SubjectClass.class);
         i.putExtra("year", posiYear);
-        i.putExtra("branch",branch);
-        i.putExtra("db",superQUeryInterface);
+        i.putExtra("branch", branch);
+        i.putExtra("db", superQUeryInterface);
         startActivity(i);
     }
 }

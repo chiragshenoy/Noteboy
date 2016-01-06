@@ -91,18 +91,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CustomAdapter(this, colleges, collegeFont, boldFont);
         mRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            /// @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//
-//                Toast.makeText(getApplicationContext(), colleges.get(position), Toast.LENGTH_LONG).show();
+
                 Intent intent = new Intent(getApplicationContext(), Selector.class);
+
+                // Pass data object in the bundle and populate details activity.
                 intent.putExtra("college_name", colleges.get(position));
-
-                View cardText = findViewById(R.id.college_name);
-
-                // ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,cardText,"profile");
-                startActivity(intent/*options.toBundle()*/);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(MainActivity.this, v, "transition");
+                startActivity(intent, options.toBundle());
 
             }
         });

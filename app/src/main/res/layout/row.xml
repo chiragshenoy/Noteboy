@@ -29,7 +29,8 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:text="B"
                 android:textColor="@color/bold_letter"
-                android:textSize="40sp" />
+                android:textSize="40sp"
+                android:transitionName="@string/transtion_name" />
 
 
             <TextView
@@ -41,7 +42,7 @@
                 android:paddingLeft="8dp"
                 android:text="College"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
 
         </LinearLayout>
