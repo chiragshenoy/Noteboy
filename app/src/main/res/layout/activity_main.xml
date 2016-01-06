@@ -37,9 +37,19 @@
         lib:enable_size_animation="true"
         lib:max_ball_size="12dp"
         lib:min_ball_size="5dp"
-        lib:movement_cycle_time="1500"
+        lib:movement_cycle_time="1000"
         lib:path="triangle"
-        lib:size_cycle_time="500"></com.github.glomadrian.loadingballs.BallView>
+        lib:size_cycle_time="500">
+
+    </com.github.glomadrian.loadingballs.BallView>
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvloading_colleges"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/loader"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:text="@string/loading_colleges" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

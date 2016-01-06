@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Noteboy</string>
+    <string name="loading_colleges">Noteboying colleges ...</string>
 </resources>

@@ -2,10 +2,13 @@ package noteboy.noteboy;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,18 +21,22 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     Context context;
     Typeface college_font;
     Typeface bold_font;
+    private int lastPosition = -1;
+
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public CardView cardView;
         public TextView tvCollegeName;
         public TextView tvBoldLetter;
 
 
         public ViewHolder(View v) {
             super(v);
+            this.cardView = (CardView) v.findViewById(R.id.card_view);
             this.tvCollegeName = (TextView) v.findViewById(R.id.college_name);
             this.tvBoldLetter = (TextView) v.findViewById(R.id.bold_letter);
 
@@ -70,10 +77,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.tvCollegeName.setText(mDataset.get(position));
         holder.tvCollegeName.setTypeface(college_font);
 
-        char c = mDataset.get(position).charAt(1);
         holder.tvBoldLetter.setText(mDataset.get(position).substring(0, 1));
         holder.tvBoldLetter.setTypeface(bold_font);
+        setAnimation(holder.cardView, position);
+    }
 
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            animation.setStartOffset(position * 120);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

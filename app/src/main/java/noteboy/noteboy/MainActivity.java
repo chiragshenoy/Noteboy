@@ -1,5 +1,7 @@
 package noteboy.noteboy;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.glomadrian.loadingballs.BallView;
 import com.parse.FindCallback;
@@ -30,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> colleges;
     private BallView ballView;
+//    private TextView tvloading_colleges;
 
+    private int mShortAnimationDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.mytoolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
+
+//        tvloading_colleges = (TextView) findViewById(R.id.tvloading_colleges);
+
+        mShortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_longAnimTime);
 
         colleges = new ArrayList<>();
 
@@ -58,16 +68,17 @@ public class MainActivity extends AppCompatActivity {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Master");
         query.whereNotEqualTo("college_name", "bobo");
         query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> scoreList, ParseException e) {
+            public void done(List<ParseObject> collegeList, ParseException e) {
                 if (e == null) {
 
-                    for (ParseObject value : scoreList) {
+                    for (ParseObject value : collegeList) {
                         colleges.add(value.getString("college_name"));
                     }
                     mAdapter.notifyDataSetChanged();
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    ballView.setVisibility(View.GONE);
-                    Log.d("score", "Retrieved " + scoreList.size() + " scores");
+//                    mRecyclerView.setVisibility(View.VISIBLE);
+//                    ballView.setVisibility(View.GONE);
+                    crossfade();
+                    Log.d("score", "Retrieved " + collegeList.size() + " College Names");
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
@@ -96,5 +107,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void crossfade() {
+
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        mRecyclerView.setAlpha(0f);
+        mRecyclerView.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        mRecyclerView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        ballView.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ballView.setVisibility(View.GONE);
+                    }
+                });
+
+//        tvloading_colleges.clearAnimation();
+//        tvloading_colleges.animate()
+//                .alpha(0f)
+//                .setDuration(mShortAnimationDuration)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        tvloading_colleges.setVisibility(View.GONE);
+//                    }
+//                });
+
+    }
+
 
 }
