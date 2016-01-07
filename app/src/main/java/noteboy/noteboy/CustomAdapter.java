@@ -43,9 +43,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
     }
 
-    public CustomAdapter(ArrayList<String> myDataset) {
+    public CustomAdapter(ArrayList<String> myDataset, Context context) {
         mDataset = myDataset;
-
+        this.context = context;
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)

@@ -49,7 +49,7 @@ public class SubjectClass extends AppCompatActivity {
         init();
         querySubjects();
 
-        adapter = new CustomAdapter(subjects);
+        adapter = new CustomAdapter(subjects, getApplicationContext());
         mRecyclerView.setAdapter(adapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 
