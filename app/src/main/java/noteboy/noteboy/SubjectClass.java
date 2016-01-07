@@ -76,7 +76,7 @@ public class SubjectClass extends AppCompatActivity {
 
                                                 String folder_main = "Noteboy";
 
-                                                File f = new File(Environment.getExternalStorageDirectory(), folder_main);
+                                                File f = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                                                 if (!f.exists()) {
                                                     f.mkdirs();
                                                 }

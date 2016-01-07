@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //    private TextView tvloading_colleges;
 
     private int mShortAnimationDuration;
+    private Drawer result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,26 +57,31 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("adasd");
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("fsadifd");
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
 
 //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                .withSelectedItem(-1)
                 .withRootView(R.id.drawer_layout)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
                 .addDrawerItems(
                         item1,
-                        new DividerDrawerItem(),
-                        item2,
-                        new SecondaryDrawerItem().withName("dasdhaisd")
+                        new DividerDrawerItem()
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
+
+                        if (position == 0) {
+                            openFolder();
+                        } else {
+                            startActivity(new Intent(getApplicationContext(), Selector.class).putExtra("college_name", colleges.get(position - 2)));
+                        }
+
                         return true;
                     }
                 })
@@ -105,9 +114,8 @@ public class MainActivity extends AppCompatActivity {
                         colleges.add(value.getString("college_name"));
                     }
                     mAdapter.notifyDataSetChanged();
-//                    mRecyclerView.setVisibility(View.VISIBLE);
-//                    ballView.setVisibility(View.GONE);
                     crossfade();
+                    populateNavigationDrawer();
                     Log.d("score", "Retrieved " + collegeList.size() + " College Names");
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
@@ -135,6 +143,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void openFolder() {
+        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+    }
+
+    private void populateNavigationDrawer() {
+//        ArrayList<SecondaryDrawerItem> navItems = new ArrayList<>();
+        for (String s : colleges) {
+            result.addItem(new SecondaryDrawerItem().withName(s));
+        }
+
     }
 
 
