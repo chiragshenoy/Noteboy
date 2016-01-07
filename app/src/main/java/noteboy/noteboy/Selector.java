@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +36,8 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  */
 public class Selector extends AppCompatActivity implements View.OnClickListener {
 
-    private ArrayList<String> Items = new ArrayList();
+    public static ArrayList<String> ItemCopy = new ArrayList();
+    public static  ArrayList<String> Items = new ArrayList();
     private Bundle b;
     private TextView text;
     private WheelView wheelView;
@@ -42,12 +45,18 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     private MaterialSpinner spinner;
     private BallView ballView;
 
-    private ArrayAdapter<String> adapter;
+    private ImageAdapter adapter;
     private LinearLayout select;
     private String superQUeryInterface;
     private String posiYear;
     private String branch;
     private Button next;
+    GridView gridview;
+    int count = 0;
+    int current_selected;
+    int previous_selected;
+    View previous_view;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +64,41 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.selector);
         init();
         parseQueryOfBranchNames();
-        setUpSpinner();
+        setUpGridView();
         populateAdapter();
         wheelViewListeners();
 
         // Toast.makeText(getApplicationContext(), "in selector " + b.get("college_name").toString(), Toast.LENGTH_LONG).show();
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                int current_selected;
+                if(count ==0 ){
+                    count++;
+                    current_selected = position;
+                    previous_selected = position;
+                    previous_view = v;
+
+                }
+                current_selected = position;
+
+                ImageView imageView = (ImageView) v.findViewById(R.id.grid_image);
+                imageView.setImageResource(ImageAdapter.mThumbIds[4]);
+
+                if(previous_selected != current_selected){
+                    View pv = previous_view;
+                    ImageView rekt = (ImageView) pv.findViewById(R.id.grid_image);
+                    rekt.setImageResource(ImageAdapter.mThumbIds[previous_selected]);
+                }
+                previous_selected = current_selected;
+                previous_view = v;
+                branch = Items.get(position);
+            }
+        });
     }
+
+
+
 
 
     //FUNCTIONS AND CLASSES IN ORDER
@@ -91,13 +128,16 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {
                 if (e == null) {
-
+                    int x =0;
                     for (ParseObject value : scoreList) {
                         Items.add(value.getString("branch"));
+                        ItemCopy.add(value.getString("branch"));
+                        x++;
                     }
                     HashSet hs = new HashSet(Items);
                     Items.clear();
                     Items.addAll(hs);
+                    gridview.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     ballView.setVisibility(View.GONE);
                     select.setVisibility(View.VISIBLE);
@@ -111,14 +151,14 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         });
     }
 
-    //Setting up spinner
-    private void setUpSpinner() {
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner = (MaterialSpinner) findViewById(R.id.spinner1);
-        spinner.setAdapter(adapter);
-    }
+    private void setUpGridView() {
 
+        adapter = new ImageAdapter(Selector.this,Items);
+        gridview = (GridView) findViewById(R.id.gridview);
+
+
+
+    }
 
 //Populating adapter of the wheel
 
@@ -170,22 +210,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i > -1) {
-                    String s = Items.get(i);
-                    Toast.makeText(getApplicationContext(), "Selected " + s, Toast.LENGTH_LONG).show();
-                    branch = s;
-                }
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
     }
 
 
@@ -198,3 +223,5 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         startActivity(i);
     }
 }
+
+

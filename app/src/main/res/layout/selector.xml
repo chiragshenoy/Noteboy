@@ -68,7 +68,19 @@
                 app:duration="2000"
                 app:text="You are from the branch : " />
 
-            <fr.ganfra.materialspinner.MaterialSpinner
+            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gridview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:columnWidth="90dp"
+                android:numColumns="auto_fit"
+                android:verticalSpacing="30dp"
+                android:horizontalSpacing="30dp"
+                android:stretchMode="columnWidth"
+                android:gravity="center"
+                />
+
+        <!--    <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/spinner1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -78,7 +90,7 @@
                 app:ms_floatingLabelColor="#00FF00"
                 app:ms_floatingLabelText="You have selected your branch,select year"
                 app:ms_hint="Select your branch"
-                app:ms_multiline="true" />
+                app:ms_multiline="true" />-->
 
             <com.antonionicolaspina.revealtextview.RevealTextView
                 android:layout_width="wrap_content"
