@@ -46,4 +46,8 @@ dependencies {
     dependencies {
         compile 'com.antonionicolaspina.revealtextview:revealtextview:0.1'
     }
+
+    compile('com.mikepenz:materialdrawer:4.6.3@aar') {
+        transitive = true
+    }
 }

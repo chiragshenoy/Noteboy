@@ -18,6 +18,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.glomadrian.loadingballs.BallView;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -46,14 +52,38 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("adasd");
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("fsadifd");
+
+//create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withRootView(R.id.drawer_layout)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem(),
+                        item2,
+                        new SecondaryDrawerItem().withName("dasdhaisd")
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        return true;
+                    }
+                })
+                .build();
+
 //        tvloading_colleges = (TextView) findViewById(R.id.tvloading_colleges);
 
         mShortAnimationDuration = getResources().getInteger(
                 android.R.integer.config_longAnimTime);
 
         colleges = new ArrayList<>();
-
-        setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         ballView = (BallView) findViewById(R.id.loader);
