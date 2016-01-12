@@ -8,6 +8,9 @@ android {
             url "http://dl.bintray.com/glomadrian/maven"
         }
     }
+    repositories {
+        jcenter()
+    }
     defaultConfig {
         applicationId "noteboy.noteboy"
         minSdkVersion 16
@@ -50,4 +53,7 @@ dependencies {
     compile('com.mikepenz:materialdrawer:4.6.3@aar') {
         transitive = true
     }
+
+
+    compile 'net.soulwolf.widget:materialRadio:1.0.1'
 }

@@ -56,72 +56,56 @@
             android:id="@+id/llSelector"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:orientation="vertical">
 
-            <com.antonionicolaspina.revealtextview.RevealTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="20dp"
-                app:duration="2000"
-                app:text="You are from the branch : " />
-
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/gridview"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:columnWidth="90dp"
-                android:numColumns="auto_fit"
-                android:verticalSpacing="30dp"
-                android:horizontalSpacing="30dp"
-                android:stretchMode="columnWidth"
-                android:gravity="center"
-                />
-
-        <!--    <fr.ganfra.materialspinner.MaterialSpinner
-                android:id="@+id/spinner1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                app:ms_arrowColor="#0000FF"
-
-                app:ms_arrowSize="16dp"
-                app:ms_floatingLabelColor="#00FF00"
-                app:ms_floatingLabelText="You have selected your branch,select year"
-                app:ms_hint="Select your branch"
-                app:ms_multiline="true" />-->
-
-            <com.antonionicolaspina.revealtextview.RevealTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="20dp"
-                app:duration="2000"
-                app:text="and year : " />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/wheelview"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:background="@mipmap/traingle" />
-
-            <com.lukedeighton.wheelview.WheelView
-                android:id="@+id/wheelview"
+            <net.soulwolf.widget.materialradio.MaterialRadioGroup xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/materialRadioGroup"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:repeatItems="true"
-                app:rotatableWheelDrawable="false"
-                app:selectionAngle="90.0"
-                app:wheelColor="#4c4cFF"
-                app:wheelItemCount="4"
-                app:wheelItemRadius="25dp"
-                app:wheelOffsetY="0dp"
-                app:wheelPadding="0dp"
-                app:wheelRadius="100dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <net.soulwolf.widget.materialradio.MaterialRadioButton
+                    android:layout_width="88dp"
+                    android:layout_height="match_parent"
+                    soulwolf:mcAnimator="true"
+                    soulwolf:mcButton="@drawable/one_state"
+                    soulwolf:mcChecked="false"
+                    soulwolf:mcText="First Year"
+                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                    soulwolf:mcTextSize="8sp" />
+
+                <net.soulwolf.widget.materialradio.MaterialRadioButton
+                    android:layout_width="88dp"
+                    android:layout_height="match_parent"
+                    soulwolf:mcAnimator="true"
+                    soulwolf:mcButton="@drawable/two_state"
+                    soulwolf:mcText="Second Year"
+                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                    soulwolf:mcTextSize="8sp" />
+
+                <net.soulwolf.widget.materialradio.MaterialRadioButton
+                    android:layout_width="88dp"
+                    android:layout_height="match_parent"
+                    soulwolf:mcAnimator="true"
+                    soulwolf:mcButton="@drawable/three_state"
+                    soulwolf:mcChecked="false"
+                    soulwolf:mcText="Third Year"
+                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                    soulwolf:mcTextSize="8sp" />
+
+                <net.soulwolf.widget.materialradio.MaterialRadioButton
+                    android:layout_width="88dp"
+                    android:layout_height="match_parent"
+                    soulwolf:mcAnimator="true"
+                    soulwolf:mcButton="@drawable/four_state"
+                    soulwolf:mcText="Fourth Year"
+                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                    soulwolf:mcTextSize="8sp" />
+
+
+            </net.soulwolf.widget.materialradio.MaterialRadioGroup>
 
             <Button
                 android:id="@+id/bIntent"
