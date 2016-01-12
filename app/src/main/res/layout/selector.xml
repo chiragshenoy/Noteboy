@@ -1,120 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:lib="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context=".Activities.Selector">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/mytoolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary"
-        android:minHeight="?attr/actionBarSize">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/frombundle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/loaderSelect"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-smallcaps"
-            android:textColor="@color/text_secondary"
-            android:textSize="24sp"
-            android:transitionName="@string/transtion_name" />
-    </android.support.v7.widget.Toolbar>
-
-
-    <com.github.glomadrian.loadingballs.BallView
-        android:id="@+id/loaderSelect"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_margin="30dp"
-        lib:ball_colors="@array/colors"
-        lib:balls="3"
-        lib:enable_size_animation="true"
-        lib:max_ball_size="12dp"
-        lib:min_ball_size="5dp"
-        lib:movement_cycle_time="1500"
-        lib:path="triangle"
-        lib:size_cycle_time="500">
-
-    </com.github.glomadrian.loadingballs.BallView>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mytoolbar"
-        android:layout_centerHorizontal="true">
-
-        <LinearLayout
-            android:id="@+id/llSelector"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <net.soulwolf.widget.materialradio.MaterialRadioGroup xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/materialRadioGroup"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/mytoolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:background="@color/primary"
+                android:minHeight="?attr/actionBarSize"
+                android:title="">
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/one_state"
-                    soulwolf:mcChecked="false"
-                    soulwolf:mcText="First Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+                <TextView
+                    android:id="@+id/frombundle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/loaderSelect"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="24sp"
+                    android:transitionName="@string/transtion_name" />
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/two_state"
-                    soulwolf:mcText="Second Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+            </android.support.v7.widget.Toolbar>
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/three_state"
-                    soulwolf:mcChecked="false"
-                    soulwolf:mcText="Third Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+        </android.support.design.widget.AppBarLayout>
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/four_state"
-                    soulwolf:mcText="Fourth Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+        <FrameLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/selector_content" />
 
 
-            </net.soulwolf.widget.materialradio.MaterialRadioGroup>
+            <com.github.glomadrian.loadingballs.BallView
+                android:id="@+id/loaderSelect"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_margin="30dp"
+                lib:ball_colors="@array/colors"
+                lib:balls="3"
+                lib:enable_size_animation="true"
+                lib:max_ball_size="12dp"
+                lib:min_ball_size="5dp"
+                lib:movement_cycle_time="1500"
+                lib:path="triangle"
+                lib:size_cycle_time="500">
 
-            <Button
-                android:id="@+id/bIntent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/wheelview" />
-        </LinearLayout>
+            </com.github.glomadrian.loadingballs.BallView>
 
-    </ScrollView>
+        </FrameLayout>
 
 
-</RelativeLayout>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

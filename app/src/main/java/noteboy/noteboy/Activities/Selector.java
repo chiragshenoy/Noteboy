@@ -1,9 +1,11 @@
 package noteboy.noteboy.Activities;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,12 @@ import com.github.glomadrian.loadingballs.BallView;
 import com.lukedeighton.wheelview.WheelView;
 
 import com.lukedeighton.wheelview.adapter.WheelAdapter;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -40,26 +48,21 @@ import noteboy.noteboy.R;
  */
 public class Selector extends AppCompatActivity implements View.OnClickListener {
 
-    public static ArrayList<String> ItemCopy = new ArrayList();
-    public static ArrayList<String> Items = new ArrayList();
     private Bundle b;
     private TextView text;
-    private WheelView wheelView;
-    private Drawable[] dArray;
-    private MaterialSpinner spinner;
+
     private BallView ballView;
 
-    private ImageAdapter adapter;
     private LinearLayout select;
     private String superQUeryInterface;
-    private String posiYear;
+
     private String branch;
     private Button next;
-    GridView gridview;
-    int count = 0;
-    int current_selected;
-    int previous_selected;
-    View previous_view;
+    HashSet<String> branches;
+    Toolbar toolbar;
+    private Drawer result;
+    private ArrayList<String> colleges;
+
 
     MaterialRadioGroup materialRadioGroup;
 
@@ -67,33 +70,94 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selector);
-        init();
-        parseQueryOfBranchNames();
-//        setUpGridView();
-//        populateAdapter();
 
-        // Toast.makeText(getApplicationContext(), "in selector " + b.get("college_name").toString(), Toast.LENGTH_LONG).show();
+
+        init();
+        init_drawer();
+        populateNavigationDrawer();
+        parseQueryOfBranchNames();
+
 
     }
 
+    private void init_drawer() {
+
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
+
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withSelectedItem(-1)
+                .withRootView(R.id.drawer_layout)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem()
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+
+                        if (position == 0) {
+                            openFolder();
+                        } else {
+
+                            Intent intent = new Intent(getApplicationContext(), Selector.class);
+
+                            // Pass data object in the bundle and populate details activity.
+                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putStringArrayListExtra("all_colleges", colleges);
+
+                            startActivity(intent);
+                        }
+
+                        return true;
+                    }
+                })
+                .build();
+
+
+    }
+
+    private void openFolder() {
+        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+    }
 
     //FUNCTIONS AND CLASSES IN ORDER
 
+    private void populateNavigationDrawer() {
+
+        for (String s : colleges) {
+            result.addItem(new SecondaryDrawerItem().withName(s));
+        }
+
+    }
 
     //INIT
     private void init() {
-        //get bundle
-        b = getIntent().getExtras();
-        select = (LinearLayout) findViewById(R.id.llSelector);
 
-        superQUeryInterface = (String) b.get("college_name");
+        b = getIntent().getExtras();
+
+        colleges = getIntent().getStringArrayListExtra("all_colleges");
+        select = (LinearLayout) findViewById(R.id.llSelector);
+        toolbar = (Toolbar) findViewById(R.id.mytoolbar);
+        toolbar.setTitle("");
+
         ballView = (BallView) findViewById(R.id.loaderSelect);
         text = (TextView) findViewById(R.id.frombundle);
+        next = (Button) findViewById(R.id.bIntent);
+
+        setSupportActionBar(toolbar);
+
+
+        superQUeryInterface = (String) b.get("college_name");
+
         text.setText(superQUeryInterface);
         select.setVisibility(View.INVISIBLE);
-        posiYear = String.valueOf(1);
 
-        next = (Button) findViewById(R.id.bIntent);
+        branches = new HashSet<>();
         next.setOnClickListener(this);
     }
 
@@ -104,11 +168,15 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {
                 if (e == null) {
+
+                    for (ParseObject value : scoreList) {
+                        branches.add(value.getString("branch"));
+                    }
+
                     ballView.setVisibility(View.GONE);
                     select.setVisibility(View.VISIBLE);
 
-
-                    Log.d("score", "Retrieved " + scoreList.size() + " scores");
+                    Log.d("score", "Retrieved " + branches.size() + " Unique branches");
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
@@ -119,27 +187,27 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(Selector.this, SubjectClass.class);
-        i.putExtra("year", posiYear);
+        i.putExtra("year", getYear());
         i.putExtra("branch", branch);
         i.putExtra("db", superQUeryInterface);
         startActivity(i);
     }
 
 
-    public String getTransport() {
+    public String getYear() {
 
         View radioButton = materialRadioGroup.findViewById(materialRadioGroup.getCheckedRadioButtonId());
         int radioId = materialRadioGroup.indexOfChild(radioButton);
 
         switch (radioId) {
             case 0:
-                return "first";
+                return "one";
             case 1:
-                return "second";
+                return "two";
             case 2:
-                return "third";
+                return "three";
             case 3:
-                return "fourth";
+                return "four";
 
         }
         return null;

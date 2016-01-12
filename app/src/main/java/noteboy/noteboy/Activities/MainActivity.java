@@ -3,22 +3,18 @@ package noteboy.noteboy.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.ActivityOptions;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.github.glomadrian.loadingballs.BallView;
 import com.mikepenz.materialdrawer.Drawer;
@@ -83,7 +79,13 @@ public class MainActivity extends AppCompatActivity {
                         if (position == 0) {
                             openFolder();
                         } else {
-                            startActivity(new Intent(getApplicationContext(), Selector.class).putExtra("college_name", colleges.get(position - 2)));
+                            Intent intent = new Intent(getApplicationContext(), Selector.class);
+
+                            // Pass data object in the bundle and populate details activity.
+                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putStringArrayListExtra("all_colleges", colleges);
+
+                            startActivity(intent);
                         }
 
                         return true;
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Pass data object in the bundle and populate details activity.
                 intent.putExtra("college_name", colleges.get(position));
+                intent.putStringArrayListExtra("all_colleges", colleges);
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(MainActivity.this, v, "transition");
                 startActivity(intent, options.toBundle());
