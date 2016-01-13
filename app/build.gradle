@@ -56,4 +56,5 @@ dependencies {
 
 
     compile 'net.soulwolf.widget:materialRadio:1.0.1'
+    compile 'com.github.clans:fab:1.6.2'
 }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
 import com.mikepenz.materialdrawer.Drawer;
@@ -35,8 +36,8 @@ import java.util.List;
 
 import noteboy.noteboy.Adapters.RecyclerViewAdapter;
 import noteboy.noteboy.R;
-import noteboy.noteboy.Adapters.ImageAdapter;
 
+import com.github.clans.fab.FloatingActionButton;
 
 /**
  * Created by Chirag Shenoy on 30-Dec-15.
@@ -51,16 +52,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     private GridLayoutManager lLayout;
 
     private LinearLayout select;
-    private String superQUeryInterface;
+    private String superQueryInterface;
 
-    private String branch;
-    private Button next;
+    private com.github.clans.fab.FloatingActionButton next;
     HashSet<String> branches;
     Toolbar toolbar;
     private Drawer result;
     private ArrayList<String> colleges;
-    GridView gridView;
-    ImageAdapter imageAdapter;
     ArrayList<String> arrayListBranches;
 
     MaterialRadioGroup materialRadioGroup;
@@ -148,18 +146,17 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         toolbar = (Toolbar) findViewById(R.id.mytoolbar);
         toolbar.setTitle("");
 
+        materialRadioGroup = (MaterialRadioGroup) findViewById(R.id.materialRadioGroup);
         ballView = (BallView) findViewById(R.id.loaderSelect);
         text = (TextView) findViewById(R.id.frombundle);
-        next = (Button) findViewById(R.id.bIntent);
+        next = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab);
 
         setSupportActionBar(toolbar);
-
-//        gridView = (GridView) findViewById(R.id.gridView);
 
         arrayListBranches = new ArrayList<>();
 
         rView = (RecyclerView) findViewById(R.id.rView);
-        lLayout = new GridLayoutManager(getApplicationContext(),3);
+        lLayout = new GridLayoutManager(getApplicationContext(), 3);
         rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
         rView.setAdapter(rcAdapter);
 
@@ -168,9 +165,9 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         arrayListBranches = new ArrayList<>();
 
 
-        superQUeryInterface = (String) b.get("college_name");
+        superQueryInterface = (String) b.get("college_name");
 
-        text.setText(superQUeryInterface);
+        text.setText(superQueryInterface);
         select.setVisibility(View.INVISIBLE);
 
         branches = new HashSet<>();
@@ -179,7 +176,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
     private void parseQueryOfBranchNames() {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(superQueryInterface);
         query.whereNotEqualTo("branch", "bobo");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {
@@ -190,12 +187,11 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                     }
 
                     arrayListBranches = new ArrayList<String>(branches);
-//                    imageAdapter = new ImageAdapter(getApplicationContext(), arrayListBranches);
-//                    gridView.setAdapter(imageAdapter);
 
-                    rView.setAdapter( new RecyclerViewAdapter(getApplicationContext(), arrayListBranches) );
+                    rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
 
-//                    rcAdapter.notifyDataSetChanged();
+                    rView.setAdapter(rcAdapter);
+
                     ballView.setVisibility(View.GONE);
                     select.setVisibility(View.VISIBLE);
 
@@ -210,9 +206,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(Selector.this, SubjectClass.class);
+        rcAdapter.notifyDataSetChanged();
+
+        Log.e("to intent", "year " + getYear() + " branch " + rcAdapter.current + " db " + superQueryInterface);
+
         i.putExtra("year", getYear());
-        i.putExtra("branch", branch);
-        i.putExtra("db", superQUeryInterface);
+        i.putExtra("branch", rcAdapter.itemList.get(rcAdapter.current));
+        i.putExtra("db", superQueryInterface);
         startActivity(i);
     }
 
@@ -224,13 +224,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         switch (radioId) {
             case 0:
-                return "one";
+                return "1";
             case 1:
-                return "two";
+                return "2";
             case 2:
-                return "three";
+                return "3";
             case 3:
-                return "four";
+                return "4";
 
         }
         return null;
