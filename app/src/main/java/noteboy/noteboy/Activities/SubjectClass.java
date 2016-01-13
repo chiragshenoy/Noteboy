@@ -1,18 +1,24 @@
 package noteboy.noteboy.Activities;
 
-import android.annotation.TargetApi;
+import android.app.DownloadManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -20,9 +26,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ProgressCallback;
-import com.parse.SaveCallback;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,12 +48,19 @@ public class SubjectClass extends AppCompatActivity {
     BallView ballView;
     RecyclerView.Adapter adapter;
     RecyclerView mRecyclerView;
+    private Drawer result;
+    Toolbar toolbar;
+    private ArrayList<String> colleges;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.subject_layout);
+        setContentView(R.layout.subject_main);
         init();
+        init_drawer();
+        populateNavigationDrawer();
         querySubjects();
 
         adapter = new CustomAdapter(subjects, getApplicationContext());
@@ -63,7 +74,7 @@ public class SubjectClass extends AppCompatActivity {
                 query.whereEqualTo("subject_name", subjects.get(position));
                 query.findInBackground(new FindCallback<ParseObject>() {
                     public void done(final List<ParseObject> scoreList, ParseException e) {
-                        if (scoreList.size() > 0) {
+                        if (scoreList.size() > 0 && e == null) {
 
 
                             final ParseFile fileObject = (ParseFile) scoreList.get(0)
@@ -118,6 +129,61 @@ public class SubjectClass extends AppCompatActivity {
 
     }
 
+
+    private void init_drawer() {
+
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
+
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withSelectedItem(-1)
+                .withRootView(R.id.drawer_layout)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem()
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+
+                        if (position == 0) {
+                            openFolder();
+                        } else {
+
+                            Intent intent = new Intent(getApplicationContext(), Selector.class);
+
+                            // Pass data object in the bundle and populate details activity.
+                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putStringArrayListExtra("all_colleges", colleges);
+
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        return true;
+                    }
+                })
+                .build();
+    }
+
+    private void openFolder() {
+        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+    }
+
+    //FUNCTIONS AND CLASSES IN ORDER
+
+    private void populateNavigationDrawer() {
+
+        for (String s : colleges) {
+            result.addItem(new SecondaryDrawerItem().withName(s));
+        }
+
+    }
+
     private void querySubjects() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
         query.whereEqualTo("branch", branch);
@@ -143,13 +209,17 @@ public class SubjectClass extends AppCompatActivity {
     }
 
     private void init() {
+        toolbar = (Toolbar) findViewById(R.id.mytoolbar);
+        toolbar.setTitle("");
+        colleges = getIntent().getStringArrayListExtra("all_colleges");
+
         subjects = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_subject);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setVisibility(View.INVISIBLE);
 
-        ballView = (BallView) findViewById(R.id.loaderSubject);
+        ballView = (BallView) findViewById(R.id.loaderSelect);
         b = getIntent().getExtras();
         year = (String) b.get("year");
         branch = (String) b.get("branch");

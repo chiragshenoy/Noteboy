@@ -208,11 +208,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         Intent i = new Intent(Selector.this, SubjectClass.class);
         rcAdapter.notifyDataSetChanged();
 
-        Log.e("to intent", "year " + getYear() + " branch " + rcAdapter.current + " db " + superQueryInterface);
+        Log.e("to intent", "year " + getYear() + " branch " + rcAdapter.itemList.get(rcAdapter.current) + " db " + superQueryInterface);
 
         i.putExtra("year", getYear());
         i.putExtra("branch", rcAdapter.itemList.get(rcAdapter.current));
         i.putExtra("db", superQueryInterface);
+        i.putStringArrayListExtra("all_colleges", colleges);
+
         startActivity(i);
     }
 
