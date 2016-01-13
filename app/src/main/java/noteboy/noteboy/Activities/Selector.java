@@ -111,6 +111,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                             intent.putStringArrayListExtra("all_colleges", colleges);
 
                             startActivity(intent);
+                            finish();
                         }
 
                         return true;

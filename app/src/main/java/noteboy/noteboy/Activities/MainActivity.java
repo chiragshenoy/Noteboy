@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.putStringArrayListExtra("all_colleges", colleges);
 
                             startActivity(intent);
+                            finish();
                         }
 
                         return true;
@@ -147,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(MainActivity.this, v, "transition");
                 startActivity(intent, options.toBundle());
+                finish();
+
 
             }
         });
