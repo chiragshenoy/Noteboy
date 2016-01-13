@@ -2,25 +2,20 @@ package noteboy.noteboy.Activities;
 
 import android.app.DownloadManager;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
-import com.lukedeighton.wheelview.WheelView;
-
-import com.lukedeighton.wheelview.adapter.WheelAdapter;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -38,9 +33,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import fr.ganfra.materialspinner.MaterialSpinner;
-import noteboy.noteboy.Adapters.ImageAdapter;
+import noteboy.noteboy.Adapters.RecyclerViewAdapter;
 import noteboy.noteboy.R;
+import noteboy.noteboy.Adapters.ImageAdapter;
 
 
 /**
@@ -53,6 +48,8 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
     private BallView ballView;
 
+    private GridLayoutManager lLayout;
+
     private LinearLayout select;
     private String superQUeryInterface;
 
@@ -62,9 +59,14 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     Toolbar toolbar;
     private Drawer result;
     private ArrayList<String> colleges;
-
+    GridView gridView;
+    ImageAdapter imageAdapter;
+    ArrayList<String> arrayListBranches;
 
     MaterialRadioGroup materialRadioGroup;
+
+    RecyclerView rView;
+    RecyclerViewAdapter rcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +154,19 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         setSupportActionBar(toolbar);
 
+//        gridView = (GridView) findViewById(R.id.gridView);
+
+        arrayListBranches = new ArrayList<>();
+
+        rView = (RecyclerView) findViewById(R.id.rView);
+        lLayout = new GridLayoutManager(getApplicationContext(),3);
+        rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
+        rView.setAdapter(rcAdapter);
+
+        rView.setHasFixedSize(true);
+        rView.setLayoutManager(lLayout);
+        arrayListBranches = new ArrayList<>();
+
 
         superQUeryInterface = (String) b.get("college_name");
 
@@ -174,6 +189,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                         branches.add(value.getString("branch"));
                     }
 
+                    arrayListBranches = new ArrayList<String>(branches);
+//                    imageAdapter = new ImageAdapter(getApplicationContext(), arrayListBranches);
+//                    gridView.setAdapter(imageAdapter);
+
+                    rView.setAdapter( new RecyclerViewAdapter(getApplicationContext(), arrayListBranches) );
+
+//                    rcAdapter.notifyDataSetChanged();
                     ballView.setVisibility(View.GONE);
                     select.setVisibility(View.VISIBLE);
 

@@ -4,75 +4,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/llSelector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mytoolbar"
-        android:layout_centerHorizontal="true">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/llSelector"
+        <net.soulwolf.widget.materialradio.MaterialRadioGroup xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/materialRadioGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <net.soulwolf.widget.materialradio.MaterialRadioGroup xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/materialRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <net.soulwolf.widget.materialradio.MaterialRadioButton
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                soulwolf:mcAnimator="true"
+                soulwolf:mcButton="@drawable/one_state"
+                soulwolf:mcChecked="false"
+                soulwolf:mcText="First Year"
+                soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                soulwolf:mcTextSize="8sp" />
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/one_state"
-                    soulwolf:mcChecked="false"
-                    soulwolf:mcText="First Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+            <net.soulwolf.widget.materialradio.MaterialRadioButton
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                soulwolf:mcAnimator="true"
+                soulwolf:mcButton="@drawable/two_state"
+                soulwolf:mcText="Second Year"
+                soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                soulwolf:mcTextSize="8sp" />
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/two_state"
-                    soulwolf:mcText="Second Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+            <net.soulwolf.widget.materialradio.MaterialRadioButton
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                soulwolf:mcAnimator="true"
+                soulwolf:mcButton="@drawable/three_state"
+                soulwolf:mcChecked="false"
+                soulwolf:mcText="Third Year"
+                soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                soulwolf:mcTextSize="8sp" />
 
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/three_state"
-                    soulwolf:mcChecked="false"
-                    soulwolf:mcText="Third Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
-
-                <net.soulwolf.widget.materialradio.MaterialRadioButton
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    soulwolf:mcAnimator="true"
-                    soulwolf:mcButton="@drawable/four_state"
-                    soulwolf:mcText="Fourth Year"
-                    soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                    soulwolf:mcTextSize="8sp" />
+            <net.soulwolf.widget.materialradio.MaterialRadioButton
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                soulwolf:mcAnimator="true"
+                soulwolf:mcButton="@drawable/four_state"
+                soulwolf:mcText="Fourth Year"
+                soulwolf:mcTextColor="@drawable/radio_button_text_selector"
+                soulwolf:mcTextSize="8sp" />
 
 
-            </net.soulwolf.widget.materialradio.MaterialRadioGroup>
+        </net.soulwolf.widget.materialradio.MaterialRadioGroup>
 
-            <Button
-                android:id="@+id/bIntent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/wheelview" />
-        </LinearLayout>
 
-    </ScrollView>
+        <!--<GridView-->
+        <!--android:id="@+id/gridView"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:columnWidth="100dp"-->
+        <!--android:drawSelectorOnTop="true"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:listSelector="@drawable/grid_item_selector"-->
+        <!--android:numColumns="3"-->
+        <!--android:stretchMode="columnWidth" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/bIntent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 
 </LinearLayout>
