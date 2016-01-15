@@ -1,7 +1,7 @@
 package noteboy.noteboy.Activities;
 
-import android.app.DownloadManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import noteboy.noteboy.Adapters.CustomAdapter;
+import noteboy.noteboy.Adapters.SubjectCustomAdapter;
 import noteboy.noteboy.Helpers.ItemClickSupport;
 import noteboy.noteboy.R;
 
@@ -47,7 +47,9 @@ import noteboy.noteboy.R;
 public class SubjectClass extends AppCompatActivity {
     Bundle b;
     String year, branch, superQUeryInterface;
-    ArrayList<String> subjects;
+    ArrayList<String> subjects_name;
+    ArrayList<String> subjects_teacher;
+
     BallView ballView;
     RecyclerView.Adapter adapter;
     RecyclerView mRecyclerView;
@@ -65,7 +67,12 @@ public class SubjectClass extends AppCompatActivity {
         populateNavigationDrawer();
         querySubjects();
 
-        adapter = new CustomAdapter(subjects, getApplicationContext());
+        Typeface subjectFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
+        Typeface teacherFont = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
+
+
+
+        adapter = new SubjectCustomAdapter(subjects_name, subjects_teacher, getApplicationContext(),subjectFont,teacherFont);
         mRecyclerView.setAdapter(adapter);
 
 
@@ -76,14 +83,14 @@ public class SubjectClass extends AppCompatActivity {
 
                 downloadingDialog = new MaterialDialog.Builder(SubjectClass.this)
                         .title(R.string.progress_dialog)
-                        .content(subjects.get(position))
+                        .content(subjects_name.get(position))
                         .progress(true, 0)
                         .progressIndeterminateStyle(true)
                         .cancelable(false)
                         .show();
 
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
-                query.whereEqualTo("subject_name", subjects.get(position));
+                query.whereEqualTo("subject_name", subjects_name.get(position));
                 query.findInBackground(new FindCallback<ParseObject>() {
                     public void done(final List<ParseObject> scoreList, ParseException e) {
                         if (scoreList.size() > 0 && e == null) {
@@ -129,7 +136,7 @@ public class SubjectClass extends AppCompatActivity {
                                                         .show();
 
                                                 downloadingDialog.setTitle("Done!");
-                                                downloadingDialog.setContent("Downloaded " + subjects.get(position));
+                                                downloadingDialog.setContent("Downloaded " + subjects_name.get(position));
                                                 downloadingDialog.setCancelable(true);
                                                 final View positive = downloadingDialog.getActionButton(DialogAction.POSITIVE);
                                                 downloadingDialog.setActionButton(DialogAction.POSITIVE, "Alright");
@@ -177,9 +184,9 @@ public class SubjectClass extends AppCompatActivity {
                                     });
 
 
-                            Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), subjects_name.get(position), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), subjects.get(position), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), subjects_name.get(position), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -263,7 +270,8 @@ public class SubjectClass extends AppCompatActivity {
                 if (e == null) {
 
                     for (ParseObject value : scoreList) {
-                        subjects.add(value.getString("subject_name"));
+                        subjects_name.add(value.getString("subject_name"));
+                        subjects_teacher.add(value.getString("teachers_name"));
                     }
                     adapter.notifyDataSetChanged();
                     ballView.setVisibility(View.GONE);
@@ -283,7 +291,8 @@ public class SubjectClass extends AppCompatActivity {
         toolbar.setTitle("");
         colleges = getIntent().getStringArrayListExtra("all_colleges");
 
-        subjects = new ArrayList<>();
+        subjects_name = new ArrayList<>();
+        subjects_teacher = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_subject);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);

@@ -3,7 +3,6 @@ package noteboy.noteboy.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -19,8 +18,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.github.glomadrian.loadingballs.BallView;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -35,7 +32,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-import noteboy.noteboy.Adapters.CustomAdapter;
+import noteboy.noteboy.Adapters.MainPageCustomAdapter;
 import noteboy.noteboy.Helpers.ItemClickSupport;
 import noteboy.noteboy.R;
 
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         Typeface collegeFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
         Typeface boldFont = Typeface.createFromAsset(getAssets(), "fonts/alfaslabone.ttf");
 
-        mAdapter = new CustomAdapter(this, colleges, collegeFont, boldFont);
+        mAdapter = new MainPageCustomAdapter(this, colleges, collegeFont, boldFont);
         mRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)

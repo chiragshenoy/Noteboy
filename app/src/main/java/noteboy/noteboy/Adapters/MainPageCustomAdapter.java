@@ -18,7 +18,7 @@ import noteboy.noteboy.R;
 /**
  * Created by Chirag Shenoy on 30-Dec-15.
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class MainPageCustomAdapter extends RecyclerView.Adapter<MainPageCustomAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     Context context;
     Typeface college_font;
@@ -45,13 +45,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
     }
 
-    public CustomAdapter(ArrayList<String> myDataset, Context context) {
+    public MainPageCustomAdapter(ArrayList<String> myDataset, Context context) {
         mDataset = myDataset;
         this.context = context;
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CustomAdapter(Context context, ArrayList<String> myDataset, Typeface college_font, Typeface bold_font) {
+    public MainPageCustomAdapter(Context context, ArrayList<String> myDataset, Typeface college_font, Typeface bold_font) {
         mDataset = myDataset;
         this.context = context;
         this.college_font = college_font;
@@ -60,11 +60,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     // Create new views (invoked by the layout manager)
     @Override
-    public CustomAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                       int viewType) {
+    public MainPageCustomAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                               int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row, parent, false);
+                .inflate(R.layout.college_row, parent, false);
 
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);

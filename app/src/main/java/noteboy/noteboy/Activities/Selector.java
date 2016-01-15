@@ -2,11 +2,12 @@ package noteboy.noteboy.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.DownloadManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.glomadrian.loadingballs.BallView;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import noteboy.noteboy.Adapters.RecyclerViewAdapter;
+import noteboy.noteboy.Adapters.RecyclerViewGridAdapter;
 import noteboy.noteboy.R;
 
 /**
@@ -52,7 +54,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     private LinearLayout select;
     private String superQueryInterface;
 
-    private com.github.clans.fab.FloatingActionButton next;
+    private FloatingActionButton next;
     HashSet<String> branches;
     Toolbar toolbar;
     private Drawer result;
@@ -62,8 +64,9 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     MaterialRadioGroup materialRadioGroup;
 
     RecyclerView rView;
-    RecyclerViewAdapter rcAdapter;
+    RecyclerViewGridAdapter rcAdapter;
     private int mShortAnimationDuration;
+    Typeface branchFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +120,23 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                         return true;
                     }
                 })
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        next.getBackground().setAlpha((int) (255 - 255 * slideOffset));
+                        Log.e("Aplha", "" + slideOffset);
+
+                    }
+                })
                 .build();
-
-
     }
 
     private void openFolder() {
@@ -127,12 +144,9 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(selectedUri, "resource/folder");
 
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
-        {
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
             startActivity(intent);
-        }
-        else
-        {
+        } else {
             // if you reach this place, it means there is no any file
             // explorer app installed on your device
         }
@@ -156,11 +170,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         select = (LinearLayout) findViewById(R.id.llSelector);
         toolbar = (Toolbar) findViewById(R.id.mytoolbar);
         toolbar.setTitle("");
+        branchFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
 
         materialRadioGroup = (MaterialRadioGroup) findViewById(R.id.materialRadioGroup);
         ballView = (BallView) findViewById(R.id.loaderSelect);
         text = (TextView) findViewById(R.id.frombundle);
-        next = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab);
+        next = (FloatingActionButton) findViewById(R.id.fab);
+        next.getBackground().setAlpha(255);
 
         setSupportActionBar(toolbar);
 
@@ -168,7 +184,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         rView = (RecyclerView) findViewById(R.id.rView);
         lLayout = new GridLayoutManager(getApplicationContext(), 3);
-        rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
+        rcAdapter = new RecyclerViewGridAdapter(getApplicationContext(), arrayListBranches, branchFont);
         rView.setAdapter(rcAdapter);
 
         rView.setHasFixedSize(true);
@@ -202,7 +218,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
                     arrayListBranches = new ArrayList<String>(branches);
 
-                    rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
+                    rcAdapter = new RecyclerViewGridAdapter(getApplicationContext(), arrayListBranches, branchFont);
 
                     rView.setAdapter(rcAdapter);
                     crossfade();
@@ -222,16 +238,25 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(Selector.this, SubjectClass.class);
-        rcAdapter.notifyDataSetChanged();
 
-        Log.e("to intent", "year " + getYear() + " branch " + rcAdapter.itemList.get(rcAdapter.current) + " db " + superQueryInterface);
 
-        i.putExtra("year", getYear());
-        i.putExtra("branch", rcAdapter.itemList.get(rcAdapter.current));
-        i.putExtra("db", superQueryInterface);
-        i.putStringArrayListExtra("all_colleges", colleges);
+        if (!getYear().equals("0") && rcAdapter.current >= 0) {
 
-        startActivity(i);
+            rcAdapter.notifyDataSetChanged();
+
+            Log.e("to intent", "year " + getYear() + " branch " + rcAdapter.itemList.get(rcAdapter.current) + " db " + superQueryInterface);
+
+            i.putExtra("year", getYear());
+            i.putExtra("branch", rcAdapter.itemList.get(rcAdapter.current));
+            i.putExtra("db", superQueryInterface);
+            i.putStringArrayListExtra("all_colleges", colleges);
+
+
+            startActivity(i);
+        } else {
+            Snackbar.make(view, "Choose a year and a branch", Snackbar.LENGTH_LONG).show();
+            Log.e("snackbar", "Snack");
+        }
     }
 
 
@@ -251,7 +276,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                 return "4";
 
         }
-        return null;
+        return "0";
     }
 
     private void crossfade() {

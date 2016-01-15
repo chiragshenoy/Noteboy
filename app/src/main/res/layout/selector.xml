@@ -73,4 +73,19 @@
 
     </LinearLayout>
 
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:background="#536DFE"
+        android:elevation="0dp"
+        app:backgroundTint="@color/primary_light"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fab_icon="@mipmap/next"
+        app:layout_behavior="noteboy.noteboy.Helpers.FloatingActionButtonBehavior" />
+
+
 </android.support.design.widget.CoordinatorLayout>

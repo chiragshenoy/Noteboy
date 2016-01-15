@@ -1,15 +1,14 @@
 package noteboy.noteboy.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +20,13 @@ import noteboy.noteboy.R;
 /**
  * Created by Chirag Shenoy on 13-Jan-16.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolders> {
+public class RecyclerViewGridAdapter extends RecyclerView.Adapter<RecyclerViewGridAdapter.RecyclerViewHolders> {
 
     public ArrayList<String> itemList;
     private Context context;
     Map<String, Integer> map = new HashMap<String, Integer>();
     Map<String, Integer> map2 = new HashMap<String, Integer>();
+    Typeface branchFont;
 
     private final ArrayList<Boolean> selected = new ArrayList<>();
     public int current = -1;
@@ -34,9 +34,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     int counter = 0;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> itemList) {
+    public RecyclerViewGridAdapter(Context context, ArrayList<String> itemList, Typeface branchFont) {
         this.itemList = itemList;
         this.context = context;
+        this.branchFont = branchFont;
 
         for (int i = 0; i < itemList.size(); i++) {
             selected.add(false);
@@ -57,6 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewHolders holder, int position) {
+        holder.countryName.setTypeface(branchFont);
+        holder.countryName.setAllCaps(true);
         holder.countryName.setText(itemList.get(position));
 
         if (!selected.get(position))
