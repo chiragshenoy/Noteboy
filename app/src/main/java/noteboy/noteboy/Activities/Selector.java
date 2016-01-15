@@ -1,20 +1,20 @@
 package noteboy.noteboy.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
 import com.mikepenz.materialdrawer.Drawer;
@@ -36,8 +36,6 @@ import java.util.List;
 
 import noteboy.noteboy.Adapters.RecyclerViewAdapter;
 import noteboy.noteboy.R;
-
-import com.github.clans.fab.FloatingActionButton;
 
 /**
  * Created by Chirag Shenoy on 30-Dec-15.
@@ -65,6 +63,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
     RecyclerView rView;
     RecyclerViewAdapter rcAdapter;
+    private int mShortAnimationDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +88,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                 .withToolbar(toolbar)
                 .withSelectedItem(-1)
                 .withRootView(R.id.drawer_layout)
+                .withHeader(R.layout.nav_header)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
                 .addDrawerItems(
@@ -107,7 +107,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                             Intent intent = new Intent(getApplicationContext(), Selector.class);
 
                             // Pass data object in the bundle and populate details activity.
-                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putExtra("college_name", colleges.get(position - 3));
                             intent.putStringArrayListExtra("all_colleges", colleges);
 
                             startActivity(intent);
@@ -123,9 +123,20 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void openFolder() {
-        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
-    }
+        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
 
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
+        {
+            startActivity(intent);
+        }
+        else
+        {
+            // if you reach this place, it means there is no any file
+            // explorer app installed on your device
+        }
+    }
     //FUNCTIONS AND CLASSES IN ORDER
 
     private void populateNavigationDrawer() {
@@ -172,6 +183,9 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         branches = new HashSet<>();
         next.setOnClickListener(this);
+
+        mShortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_longAnimTime);
     }
 
     private void parseQueryOfBranchNames() {
@@ -191,9 +205,11 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                     rcAdapter = new RecyclerViewAdapter(getApplicationContext(), arrayListBranches);
 
                     rView.setAdapter(rcAdapter);
-
-                    ballView.setVisibility(View.GONE);
-                    select.setVisibility(View.VISIBLE);
+                    crossfade();
+//
+//
+//                    ballView.setVisibility(View.GONE);
+//                    select.setVisibility(View.VISIBLE);
 
                     Log.d("score", "Retrieved " + branches.size() + " Unique branches");
                 } else {
@@ -236,6 +252,48 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         }
         return null;
+    }
+
+    private void crossfade() {
+
+        // Set the content view to 0% opacity but visible, so that it is visible
+        // (but fully transparent) during the animation.
+        rView.setAlpha(0f);
+        rView.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        rView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        ballView.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        ballView.setVisibility(View.GONE);
+                        select.setVisibility(View.VISIBLE);
+
+                    }
+                });
+
+//        tvloading_colleges.clearAnimation();
+//        tvloading_colleges.animate()
+//                .alpha(0f)
+//                .setDuration(mShortAnimationDuration)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        tvloading_colleges.setVisibility(View.GONE);
+//                    }
+//                });
+
     }
 
 }

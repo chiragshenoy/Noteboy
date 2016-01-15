@@ -6,8 +6,10 @@ import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.github.glomadrian.loadingballs.BallView;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -59,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
 
-//create the drawer and remember the `Drawer` result object
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withSelectedItem(-1)
+                .withHeader(R.layout.nav_header)
                 .withRootView(R.id.drawer_layout)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
@@ -76,14 +80,15 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
 
-                        if (position == 0) {
+                        if (position == 1) {
                             openFolder();
                         } else {
                             Intent intent = new Intent(getApplicationContext(), Selector.class);
 
                             // Pass data object in the bundle and populate details activity.
-                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putExtra("college_name", colleges.get(position - 3));
                             intent.putStringArrayListExtra("all_colleges", colleges);
+                            result.closeDrawer();
 
                             startActivity(intent);
                         }
@@ -153,7 +158,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openFolder() {
-        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
+
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
+        {
+            startActivity(intent);
+        }
+        else
+        {
+            // if you reach this place, it means there is no any file
+            // explorer app installed on your device
+        }
     }
 
     private void populateNavigationDrawer() {

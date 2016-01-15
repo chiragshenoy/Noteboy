@@ -2,6 +2,7 @@ package noteboy.noteboy.Activities;
 
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.glomadrian.loadingballs.BallView;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -51,8 +54,7 @@ public class SubjectClass extends AppCompatActivity {
     private Drawer result;
     Toolbar toolbar;
     private ArrayList<String> colleges;
-
-
+    MaterialDialog downloadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +67,20 @@ public class SubjectClass extends AppCompatActivity {
 
         adapter = new CustomAdapter(subjects, getApplicationContext());
         mRecyclerView.setAdapter(adapter);
+
+
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
+
+                downloadingDialog = new MaterialDialog.Builder(SubjectClass.this)
+                        .title(R.string.progress_dialog)
+                        .content(subjects.get(position))
+                        .progress(true, 0)
+                        .progressIndeterminateStyle(true)
+                        .cancelable(false)
+                        .show();
 
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(superQUeryInterface);
                 query.whereEqualTo("subject_name", subjects.get(position));
@@ -90,7 +102,7 @@ public class SubjectClass extends AppCompatActivity {
 
                                                 String folder_main = "Noteboy";
 
-                                                File f = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                                                File f = new File(Environment.getExternalStorageDirectory(), folder_main);
                                                 if (!f.exists()) {
                                                     f.mkdirs();
                                                 }
@@ -105,13 +117,62 @@ public class SubjectClass extends AppCompatActivity {
                                                     e1.printStackTrace();
                                                 }
 
+                                                downloadingDialog.dismiss();
+
+
+                                                downloadingDialog = new MaterialDialog.Builder(SubjectClass.this)
+                                                        .title("Done!")
+                                                        .titleColorRes(R.color.done)
+                                                        .positiveColorRes(R.color.primary_dark)
+                                                        .negativeColorRes(R.color.primary_dark)
+                                                        .content("")
+                                                        .show();
+
+                                                downloadingDialog.setTitle("Done!");
+                                                downloadingDialog.setContent("Downloaded " + subjects.get(position));
+                                                downloadingDialog.setCancelable(true);
+                                                final View positive = downloadingDialog.getActionButton(DialogAction.POSITIVE);
+                                                downloadingDialog.setActionButton(DialogAction.POSITIVE, "Alright");
+
+                                                downloadingDialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                                                positive.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        downloadingDialog.dismiss();
+                                                    }
+                                                });
+
+
+                                                final View negative = downloadingDialog.getActionButton(DialogAction.NEGATIVE);
+
+                                                downloadingDialog.setActionButton(DialogAction.NEGATIVE, "View Notes");
+
+                                                downloadingDialog.getActionButton(DialogAction.NEGATIVE).setEnabled(true);
+                                                negative.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        downloadingDialog.dismiss();
+                                                        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+                                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                        intent.setDataAndType(selectedUri, "resource/folder");
+
+                                                        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                                                            startActivity(intent);
+                                                        } else {
+                                                            // if you reach this place, it means there is no any file
+                                                            // explorer app installed on your device
+                                                        }
+                                                    }
+                                                });
+
                                             }
                                         }
 
                                     }, new ProgressCallback() {
                                         public void done(Integer percentDone) {
                                             // Update your progress spinner here. percentDone will be between 0 and 100.
-
+                                            downloadingDialog.setProgress(percentDone);
+                                            Log.e("Downloaded", "" + percentDone);
                                         }
                                     });
 
@@ -137,6 +198,7 @@ public class SubjectClass extends AppCompatActivity {
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                .withHeader(R.layout.nav_header)
                 .withSelectedItem(-1)
                 .withRootView(R.id.drawer_layout)
                 .withActionBarDrawerToggle(true)
@@ -157,7 +219,7 @@ public class SubjectClass extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), Selector.class);
 
                             // Pass data object in the bundle and populate details activity.
-                            intent.putExtra("college_name", colleges.get(position - 2));
+                            intent.putExtra("college_name", colleges.get(position - 3));
                             intent.putStringArrayListExtra("all_colleges", colleges);
 
                             startActivity(intent);
@@ -171,9 +233,17 @@ public class SubjectClass extends AppCompatActivity {
     }
 
     private void openFolder() {
-        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
-    }
+        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
 
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+            startActivity(intent);
+        } else {
+            // if you reach this place, it means there is no any file
+            // explorer app installed on your device
+        }
+    }
     //FUNCTIONS AND CLASSES IN ORDER
 
     private void populateNavigationDrawer() {
