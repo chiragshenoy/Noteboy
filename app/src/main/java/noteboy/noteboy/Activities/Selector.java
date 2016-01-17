@@ -103,7 +103,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
 
-                        if (position == 0) {
+                        if (position == 1) {
                             openFolder();
                         } else {
 
@@ -140,7 +140,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void openFolder() {
-        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(selectedUri, "resource/folder");
 

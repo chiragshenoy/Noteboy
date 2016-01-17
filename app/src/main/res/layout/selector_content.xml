@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -37,7 +36,8 @@
                 soulwolf:mcButton="@drawable/two_state"
                 soulwolf:mcText="Second Year"
                 soulwolf:mcTextColor="@drawable/radio_button_text_selector"
-                soulwolf:mcTextSize="8sp" />
+                soulwolf:mcTextSize="8sp"
+                soulwolf:theme="@style/AppTheme" />
 
             <net.soulwolf.widget.materialradio.MaterialRadioButton
                 android:layout_width="88dp"
@@ -62,19 +62,18 @@
         </net.soulwolf.widget.materialradio.MaterialRadioGroup>
 
 
-        <!--<GridView-->
-        <!--android:id="@+id/gridView"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:columnWidth="100dp"-->
-        <!--android:drawSelectorOnTop="true"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:listSelector="@drawable/grid_item_selector"-->
-        <!--android:numColumns="3"-->
-        <!--android:stretchMode="columnWidth" />-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="5dp"
+            android:background="#99dddddd">
+
+        </View>
+
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

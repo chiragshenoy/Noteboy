@@ -4,4 +4,7 @@
     <string name="transtion_name">transition</string>
     <string name="progress_dialog">Dowloading Notes for you</string>
     <string name="please_wait">Hold on ...</string>
+
+    <string name="transition_branch">transition_branch</string>
+    <string name="transition_year">transition_year</string>
 </resources>

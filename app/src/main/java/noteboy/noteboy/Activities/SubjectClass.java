@@ -71,8 +71,7 @@ public class SubjectClass extends AppCompatActivity {
         Typeface teacherFont = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
 
 
-
-        adapter = new SubjectCustomAdapter(subjects_name, subjects_teacher, getApplicationContext(),subjectFont,teacherFont);
+        adapter = new SubjectCustomAdapter(subjects_name, subjects_teacher, getApplicationContext(), subjectFont, teacherFont);
         mRecyclerView.setAdapter(adapter);
 
 
@@ -107,21 +106,32 @@ public class SubjectClass extends AppCompatActivity {
                                                 Log.d("test",
                                                         "We've got data in data.");
 
-                                                String folder_main = "Noteboy";
+//                                                String folder_main = "Noteboy";
+//
+//                                                File f = new File(Environment.getExternalStorageDirectory(), folder_main);
+//                                                if (!f.exists()) {
+//                                                    f.mkdirs();
+//                                                }
+//                                                try {
+//                                                    String path = f.getAbsolutePath() + File.separator + scoreList.get(0).get("subject_name");
+//                                                    FileOutputStream stream = new FileOutputStream(path);
+//                                                    stream.write(data);
+//                                                } catch (FileNotFoundException e1) {
+//                                                    Toast.makeText(getApplicationContext(), "Error saving file.Contact Noteboy", Toast.LENGTH_LONG).show();
+//                                                    e1.printStackTrace();
+//                                                } catch (IOException e1) {
+//                                                    e1.printStackTrace();
+//                                                }
 
-                                                File f = new File(Environment.getExternalStorageDirectory(), folder_main);
-                                                if (!f.exists()) {
-                                                    f.mkdirs();
-                                                }
+                                                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                                                File file = new File(path, scoreList.get(0).get("subject_name").toString());
                                                 try {
-                                                    String path = f.getAbsolutePath() + File.separator + scoreList.get(0).get("subject_name");
-                                                    FileOutputStream stream = new FileOutputStream(path);
+                                                    FileOutputStream stream = new FileOutputStream(file, true);
                                                     stream.write(data);
-                                                } catch (FileNotFoundException e1) {
-                                                    Toast.makeText(getApplicationContext(), "Error saving file.Contact Noteboy", Toast.LENGTH_LONG).show();
-                                                    e1.printStackTrace();
-                                                } catch (IOException e1) {
-                                                    e1.printStackTrace();
+                                                    stream.close();
+                                                    Log.i("saveData", "Data Saved");
+                                                } catch (IOException e2) {
+                                                    Log.e("SAVE DATA", "Could not write file " + e2.getMessage());
                                                 }
 
                                                 downloadingDialog.dismiss();
@@ -159,16 +169,7 @@ public class SubjectClass extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
                                                         downloadingDialog.dismiss();
-                                                        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
-                                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                        intent.setDataAndType(selectedUri, "resource/folder");
-
-                                                        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-                                                            startActivity(intent);
-                                                        } else {
-                                                            // if you reach this place, it means there is no any file
-                                                            // explorer app installed on your device
-                                                        }
+                                                        openFolder();
                                                     }
                                                 });
 
@@ -219,7 +220,7 @@ public class SubjectClass extends AppCompatActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
 
-                        if (position == 0) {
+                        if (position == 1) {
                             openFolder();
                         } else {
 
@@ -240,7 +241,7 @@ public class SubjectClass extends AppCompatActivity {
     }
 
     private void openFolder() {
-        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/Noteboy/");
+        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(selectedUri, "resource/folder");
 
@@ -303,6 +304,7 @@ public class SubjectClass extends AppCompatActivity {
         year = (String) b.get("year");
         branch = (String) b.get("branch");
         superQUeryInterface = (String) b.get("db");
+        toolbar.setTitle(superQUeryInterface + " " + branch.toUpperCase());
     }
 
 }
