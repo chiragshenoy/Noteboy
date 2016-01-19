@@ -46,6 +46,8 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
     private Bundle b;
     private TextView text;
+    private TextView tvSelectYear;
+    private TextView tvSelectBranch;
 
     private BallView ballView;
 
@@ -177,6 +179,12 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         text = (TextView) findViewById(R.id.frombundle);
         next = (FloatingActionButton) findViewById(R.id.fab);
         next.getBackground().setAlpha(255);
+
+        tvSelectBranch = (TextView) findViewById(R.id.select_branch);
+        tvSelectYear = (TextView) findViewById(R.id.select_year);
+
+        tvSelectBranch.setTypeface(branchFont);
+        tvSelectYear.setTypeface(branchFont);
 
         setSupportActionBar(toolbar);
 

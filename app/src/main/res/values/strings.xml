@@ -7,4 +7,6 @@
 
     <string name="transition_branch">transition_branch</string>
     <string name="transition_year">transition_year</string>
+    <string name="select_year">Select a year</string>
+    <string name="select_branch">Select a branch</string>
 </resources>
