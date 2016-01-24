@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -258,7 +259,6 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
             i.putExtra("branch", rcAdapter.itemList.get(rcAdapter.current));
             i.putExtra("db", superQueryInterface);
             i.putStringArrayListExtra("all_colleges", colleges);
-
 
             startActivity(i);
         } else {

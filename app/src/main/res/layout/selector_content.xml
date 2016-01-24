@@ -27,7 +27,7 @@
             android:orientation="horizontal">
 
             <net.soulwolf.widget.materialradio.MaterialRadioButton
-                android:layout_width="88dp"
+                android:layout_width="72dp"
                 android:layout_height="match_parent"
                 soulwolf:mcAnimator="true"
                 soulwolf:mcButton="@drawable/one_state"
@@ -37,7 +37,7 @@
                 soulwolf:mcTextSize="8sp" />
 
             <net.soulwolf.widget.materialradio.MaterialRadioButton
-                android:layout_width="88dp"
+                android:layout_width="72dp"
                 android:layout_height="match_parent"
                 soulwolf:mcAnimator="true"
                 soulwolf:mcButton="@drawable/two_state"
@@ -47,7 +47,7 @@
                 soulwolf:theme="@style/AppTheme" />
 
             <net.soulwolf.widget.materialradio.MaterialRadioButton
-                android:layout_width="88dp"
+                android:layout_width="72dp"
                 android:layout_height="match_parent"
                 soulwolf:mcAnimator="true"
                 soulwolf:mcButton="@drawable/three_state"
@@ -57,7 +57,7 @@
                 soulwolf:mcTextSize="8sp" />
 
             <net.soulwolf.widget.materialradio.MaterialRadioButton
-                android:layout_width="88dp"
+                android:layout_width="72dp"
                 android:layout_height="match_parent"
                 soulwolf:mcAnimator="true"
                 soulwolf:mcButton="@drawable/four_state"

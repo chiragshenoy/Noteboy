@@ -84,7 +84,7 @@
         app:backgroundTint="@color/primary_light"
         app:borderWidth="0dp"
         app:elevation="3dp"
-        app:fab_icon="@mipmap/go"
+        app:fab_icon="@mipmap/download"
         app:layout_behavior="noteboy.noteboy.Helpers.FloatingActionButtonBehavior" />
 
 
