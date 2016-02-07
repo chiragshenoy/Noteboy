@@ -3,8 +3,12 @@ package noteboy.noteboy.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +20,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.github.glomadrian.loadingballs.BallView;
+import com.jpardogo.android.googleprogressbar.library.NexusRotationCrossDrawable;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -43,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> colleges;
     private BallView ballView;
+    private ProgressBar mProgressBar;
 //    private TextView tvloading_colleges;
 
     private int mShortAnimationDuration;
@@ -57,117 +65,125 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-        //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
+        if (isNetworkAvailable()) {
 
-        result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withSelectedItem(-1)
-                .withHeader(R.layout.nav_header)
-                .withRootView(R.id.drawer_layout)
-                .withActionBarDrawerToggle(true)
-                .withActionBarDrawerToggleAnimated(true)
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem()
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
+            //if you want to update the items at a later time it is recommended to keep it in a variable
+            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("My Notes");
 
-                        if (position == 1) {
-                            openFolder();
-                        } else {
-                            Intent intent = new Intent(getApplicationContext(), Selector.class);
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withToolbar(toolbar)
+                    .withSelectedItem(-1)
+                    .withHeader(R.layout.nav_header)
+                    .withRootView(R.id.drawer_layout)
+                    .withActionBarDrawerToggle(true)
+                    .withActionBarDrawerToggleAnimated(true)
+                    .addDrawerItems(
+                            item1,
+                            new DividerDrawerItem()
+                    )
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            // do something with the clicked item :D
 
-                            // Pass data object in the bundle and populate details activity.
-                            intent.putExtra("college_name", colleges.get(position - 3));
-                            intent.putStringArrayListExtra("all_colleges", colleges);
-                            result.closeDrawer();
+                            if (position == 1) {
+                                openFolder();
+                            } else {
+                                Intent intent = new Intent(getApplicationContext(), Selector.class);
 
-                            startActivity(intent);
+                                // Pass data object in the bundle and populate details activity.
+                                intent.putExtra("college_name", colleges.get(position - 3));
+                                intent.putStringArrayListExtra("all_colleges", colleges);
+                                result.closeDrawer();
+
+                                startActivity(intent);
+                            }
+
+                            return true;
                         }
-
-                        return true;
-                    }
-                })
-                .build();
+                    })
+                    .build();
 
 //        tvloading_colleges = (TextView) findViewById(R.id.tvloading_colleges);
 
-        mShortAnimationDuration = getResources().getInteger(
-                android.R.integer.config_longAnimTime);
+            mShortAnimationDuration = getResources().getInteger(
+                    android.R.integer.config_longAnimTime);
 
-        colleges = new ArrayList<>();
+            colleges = new ArrayList<>();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        ballView = (BallView) findViewById(R.id.loader);
+            mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+//        ballView = (BallView) findViewById(R.id.loader);
+            mProgressBar = (ProgressBar) findViewById(R.id.loader);
+            mProgressBar.setIndeterminateDrawable(new
+                    NexusRotationCrossDrawable.Builder(this)
+                    .colors(getResources().getIntArray(R.array.colors))
+                    .build());
+            mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.setHasFixedSize(true);
+            // use a linear layout manager
+            mLayoutManager = new LinearLayoutManager(this);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setVisibility(View.INVISIBLE);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setVisibility(View.INVISIBLE);
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Master");
+            query.whereNotEqualTo("college_name", "bobo");
+            query.findInBackground(new FindCallback<ParseObject>() {
+                public void done(List<ParseObject> collegeList, ParseException e) {
+                    if (e == null) {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Master");
-        query.whereNotEqualTo("college_name", "bobo");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> collegeList, ParseException e) {
-                if (e == null) {
-
-                    for (ParseObject value : collegeList) {
-                        colleges.add(value.getString("college_name"));
+                        for (ParseObject value : collegeList) {
+                            colleges.add(value.getString("college_name"));
+                        }
+                        mAdapter.notifyDataSetChanged();
+                        crossfade();
+                        populateNavigationDrawer();
+                        Log.d("score", "Retrieved " + collegeList.size() + " College Names");
+                    } else {
+                        Log.d("score", "Error: " + e.getMessage());
                     }
-                    mAdapter.notifyDataSetChanged();
-                    crossfade();
-                    populateNavigationDrawer();
-                    Log.d("score", "Retrieved " + collegeList.size() + " College Names");
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
                 }
-            }
-        });
+            });
 
-        Typeface collegeFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
-        Typeface boldFont = Typeface.createFromAsset(getAssets(), "fonts/alfaslabone.ttf");
+            Typeface collegeFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
+            Typeface boldFont = Typeface.createFromAsset(getAssets(), "fonts/alfaslabone.ttf");
 
-        mAdapter = new MainPageCustomAdapter(this, colleges, collegeFont, boldFont);
-        mRecyclerView.setAdapter(mAdapter);
-        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+            mAdapter = new MainPageCustomAdapter(this, colleges, collegeFont, boldFont);
+            mRecyclerView.setAdapter(mAdapter);
+            ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
-                Intent intent = new Intent(getApplicationContext(), Selector.class);
+                    Intent intent = new Intent(getApplicationContext(), Selector.class);
 
-                // Pass data object in the bundle and populate details activity.
-                intent.putExtra("college_name", colleges.get(position));
-                intent.putStringArrayListExtra("all_colleges", colleges);
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(MainActivity.this, v, "transition");
-                startActivity(intent, options.toBundle());
+                    // Pass data object in the bundle and populate details activity.
+                    intent.putExtra("college_name", colleges.get(position));
+                    intent.putStringArrayListExtra("all_colleges", colleges);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(MainActivity.this, v, "transition");
+                    startActivity(intent, options.toBundle());
 
-            }
-        });
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Please connect to Internet to proceed", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void openFolder() {
-        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri, "resource/folder");
-
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
-        {
-            startActivity(intent);
-        }
-        else
-        {
-            // if you reach this place, it means there is no any file
-            // explorer app installed on your device
-        }
+//        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(selectedUri, "*/*");
+//
+//        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+//            startActivity(intent);
+//        } else {
+//            // if you reach this place, it means there is no any file
+//            // explorer app installed on your device
+//        }
+//        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        startActivity(new Intent(getApplicationContext(), NotesViewer.class));
     }
 
     private void populateNavigationDrawer() {
@@ -196,13 +212,13 @@ public class MainActivity extends AppCompatActivity {
         // Animate the loading view to 0% opacity. After the animation ends,
         // set its visibility to GONE as an optimization step (it won't
         // participate in layout passes, etc.)
-        ballView.animate()
+        mProgressBar.animate()
                 .alpha(0f)
                 .setDuration(mShortAnimationDuration)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        ballView.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
 
@@ -219,5 +235,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 }

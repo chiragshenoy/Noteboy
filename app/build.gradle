@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId "noteboy.noteboy"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -65,5 +65,7 @@ dependencies {
     }
 
     compile 'com.getbase:floatingactionbutton:1.9.1'
-
+    compile 'com.jpardogo.googleprogressbar:library:1.2.0'
+    compile 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
+    compile files('libs/PdfViewer.jar')
 }

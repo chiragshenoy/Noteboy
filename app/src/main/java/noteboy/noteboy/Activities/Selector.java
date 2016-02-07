@@ -2,13 +2,15 @@ package noteboy.noteboy.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.glomadrian.loadingballs.BallView;
+import com.jpardogo.android.googleprogressbar.library.NexusRotationCrossDrawable;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -70,18 +75,23 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     RecyclerViewGridAdapter rcAdapter;
     private int mShortAnimationDuration;
     Typeface branchFont;
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selector);
 
+        if (isNetworkAvailable()) {
 
-        init();
-        init_drawer();
-        populateNavigationDrawer();
-        parseQueryOfBranchNames();
+            init();
+            init_drawer();
+            populateNavigationDrawer();
+            parseQueryOfBranchNames();
+        } else {
+            Toast.makeText(getApplicationContext(), "Please connect to Internet to proceed", Toast.LENGTH_LONG).show();
 
+        }
 
     }
 
@@ -145,7 +155,7 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     private void openFolder() {
         Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri, "resource/folder");
+        intent.setDataAndType(selectedUri, "*/*");
 
         if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
             startActivity(intent);
@@ -155,6 +165,13 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         }
     }
     //FUNCTIONS AND CLASSES IN ORDER
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     private void populateNavigationDrawer() {
 
@@ -176,9 +193,10 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
         branchFont = Typeface.createFromAsset(getAssets(), "fonts/candela.otf");
 
         materialRadioGroup = (MaterialRadioGroup) findViewById(R.id.materialRadioGroup);
-        ballView = (BallView) findViewById(R.id.loaderSelect);
+//        ballView = (BallView) findViewById(R.id.loaderSelect);
         text = (TextView) findViewById(R.id.frombundle);
         next = (FloatingActionButton) findViewById(R.id.fab);
+        next.setVisibility(View.INVISIBLE);
         next.getBackground().setAlpha(255);
 
         tvSelectBranch = (TextView) findViewById(R.id.select_branch);
@@ -186,6 +204,12 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
 
         tvSelectBranch.setTypeface(branchFont);
         tvSelectYear.setTypeface(branchFont);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.loaderSelect);
+        mProgressBar.setIndeterminateDrawable(new
+                NexusRotationCrossDrawable.Builder(this)
+                .colors(getResources().getIntArray(R.array.colors))
+                .build());
 
         setSupportActionBar(toolbar);
 
@@ -263,7 +287,6 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
             startActivity(i);
         } else {
             Snackbar.make(view, "Choose a year and a branch", Snackbar.LENGTH_LONG).show();
-            Log.e("snackbar", "Snack");
         }
     }
 
@@ -301,16 +324,27 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
                 .setDuration(mShortAnimationDuration)
                 .setListener(null);
 
+        next.setAlpha(0f);
+        next.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        next.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+
         // Animate the loading view to 0% opacity. After the animation ends,
         // set its visibility to GONE as an optimization step (it won't
         // participate in layout passes, etc.)
-        ballView.animate()
+        mProgressBar.animate()
                 .alpha(0f)
                 .setDuration(mShortAnimationDuration)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        ballView.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                         select.setVisibility(View.VISIBLE);
 
                     }

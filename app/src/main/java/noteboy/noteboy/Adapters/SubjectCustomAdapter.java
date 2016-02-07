@@ -84,35 +84,35 @@ public class SubjectCustomAdapter extends RecyclerView.Adapter<SubjectCustomAdap
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.tvsubjectname.setTypeface(subjectFont);
-        if(subjects_name.get(position).length() > 28){
+        if (subjects_name.get(position).length() > 28) {
             holder.tvsubjectname.setTextSize(12);
         }
 
-        holder.tvsubjectname.setText(subjects_name.get(position).substring(0, subjects_name.get(position).length() - 4));
+        holder.tvsubjectname.setText(subjects_name.get(position));
 
         holder.tvsubjectTeacher.setTypeface(teacherFont);
         holder.tvsubjectTeacher.setText(subjects_teachers.get(position));
 
-        holder.ivIcon.setImageResource(getIcon(position));
+        holder.ivIcon.setImageResource(R.mipmap.ic_pdf);
 
         setAnimation(holder.cardView, position);
     }
 
-    private int getIcon(int position) {
-
-        if (subjects_name.get(position).contains("pdf")) {
-            Log.e("Yes", "pdf");
-            return R.mipmap.ic_pdf;
-        } else if (subjects_name.get(position).contains("doc") || subjects_name.get(position).contains("docx")) {
-            return R.mipmap.ic_doc;
-        } else if (subjects_name.get(position).contains("ppt") || subjects_name.get(position).contains("pptx")) {
-            return R.mipmap.ic_ppt;
-        } else if (subjects_name.get(position).contains("xls")) {
-            return R.mipmap.ic_xls;
-        }
-
-        return R.drawable.ic_action_assignment;
-    }
+//    private int getIcon(int position) {
+//
+//        if (subjects_name.get(position).contains("pdf")) {
+//            Log.e("Yes", "pdf");
+//            return R.mipmap.ic_pdf;
+//        } else if (subjects_name.get(position).contains("doc") || subjects_name.get(position).contains("docx")) {
+//            return R.mipmap.ic_doc;
+//        } else if (subjects_name.get(position).contains("ppt") || subjects_name.get(position).contains("pptx")) {
+//            return R.mipmap.ic_ppt;
+//        } else if (subjects_name.get(position).contains("xls")) {
+//            return R.mipmap.ic_xls;
+//        }
+//
+//        return R.drawable.ic_action_assignment;
+//    }
 
     private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated

@@ -13,9 +13,10 @@
     <color name="ball3">#FBC02D</color>
 
     <integer-array name="colors">
-        <item>@color/ball1</item>
-        <item>@color/ball2</item>
-        <item>@color/ball3</item>
+        <item>@color/primary</item>
+        <item>@color/primary</item>
+        <item>@color/primary</item>
+        <item>@color/primary</item>
     </integer-array>
 
     <color name="bold_letter">#FFFFFF</color>
