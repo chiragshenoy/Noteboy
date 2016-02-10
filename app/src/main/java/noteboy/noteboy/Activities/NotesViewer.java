@@ -7,6 +7,9 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.joanzapata.pdfview.PDFView;
 
 import net.sf.andpdf.pdfviewer.PdfViewerActivity;
 
@@ -20,23 +23,44 @@ public class NotesViewer extends ListActivity {
 
     String[] pdflist;
     File[] imagelist;
+    PDFView pdfView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.main);
+        String folder_main = "NoteBoy";
 
-        File images =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        imagelist = images.listFiles(new FilenameFilter() {
+        File f = new File(Environment.getExternalStorageDirectory(), folder_main);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+
+
+//        File images =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        imagelist = f.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return ((name.endsWith(".pdf")));
             }
         });
-        pdflist = new String[imagelist.length];
-        for (int i = 0; i < imagelist.length; i++) {
-            pdflist[i] = imagelist[i].getName();
+
+        if (imagelist == null) {
+            try {
+                if (imagelist.length == 0) {
+                    Toast.makeText(getApplicationContext(), "No notes downloaded.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "No notes downloaded.", Toast.LENGTH_SHORT).show();
+            }
+            pdflist = new String[imagelist.length];
+            for (int i = 0; i < imagelist.length; i++) {
+                pdflist[i] = imagelist[i].getName();
+            }
+            this.setListAdapter(new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, pdflist));
+        } else {
+            Toast.makeText(getApplicationContext(), "No notes downloaded.", Toast.LENGTH_SHORT).show();
         }
-        this.setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, pdflist));
     }
 
     protected void onListItemClick(ListView l, View v, int position, long id) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Noteboy</string>
+    <string name="app_name">NoteBoy</string>
     <string name="loading_colleges">Noteboying colleges ...</string>
     <string name="transtion_name">transition</string>
     <string name="progress_dialog">Dowloading Notes for you</string>

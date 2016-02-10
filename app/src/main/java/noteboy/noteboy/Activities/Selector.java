@@ -153,16 +153,18 @@ public class Selector extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void openFolder() {
-        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri, "*/*");
+//        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(selectedUri, "*/*");
+//
+//        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+//            startActivity(intent);
+//        } else {
+//            // if you reach this place, it means there is no any file
+//            // explorer app installed on your device
+//        }
+        startActivity(new Intent(getApplicationContext(), NotesViewer.class));
 
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivity(intent);
-        } else {
-            // if you reach this place, it means there is no any file
-            // explorer app installed on your device
-        }
     }
     //FUNCTIONS AND CLASSES IN ORDER
 

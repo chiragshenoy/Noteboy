@@ -137,8 +137,14 @@ public class SubjectClass extends AppCompatActivity {
                                                         Log.d("test",
                                                                 "We've got data in data.");
 
-                                                        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                                                        File file = new File(path, scoreList.get(0).get("subject_name").toString() + ".pdf");
+                                                        String folder_main = "NoteBoy";
+
+                                                        File f = new File(Environment.getExternalStorageDirectory(), folder_main);
+                                                        if (!f.exists()) {
+                                                            f.mkdirs();
+                                                        }
+
+                                                        File file = new File(f, scoreList.get(0).get("subject_name").toString() + ".pdf");
                                                         try {
                                                             FileOutputStream stream = new FileOutputStream(file, true);
                                                             stream.write(data);
@@ -301,16 +307,18 @@ public class SubjectClass extends AppCompatActivity {
     }
 
     private void openFolder() {
-        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(selectedUri, "*/*");
+//        Uri selectedUri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(selectedUri, "*/*");
+//
+//        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+//            startActivity(intent);
+//        } else {
+//            // if you reach this place, it means there is no any file
+//            // explorer app installed on your device
+//        }
+        startActivity(new Intent(getApplicationContext(), NotesViewer.class));
 
-        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
-            startActivity(intent);
-        } else {
-            // if you reach this place, it means there is no any file
-            // explorer app installed on your device
-        }
     }
     //FUNCTIONS AND CLASSES IN ORDER
 
