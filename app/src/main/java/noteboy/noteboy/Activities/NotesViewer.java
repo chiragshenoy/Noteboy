@@ -32,9 +32,9 @@ public class NotesViewer extends ListActivity {
         String folder_main = "NoteBoy";
 
         File f = new File(Environment.getExternalStorageDirectory(), folder_main);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+//        if (!f.exists()) {
+//            f.mkdirs();
+//        }
 
 
 //        File images =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -44,7 +44,7 @@ public class NotesViewer extends ListActivity {
             }
         });
 
-        if (imagelist == null) {
+        if (imagelist != null) {
             try {
                 if (imagelist.length == 0) {
                     Toast.makeText(getApplicationContext(), "No notes downloaded.", Toast.LENGTH_SHORT).show();
